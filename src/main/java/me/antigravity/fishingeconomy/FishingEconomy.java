@@ -79,6 +79,9 @@ public class FishingEconomy extends JavaPlugin {
     private me.antigravity.fishingeconomy.fishing.SubmarineManager submarineManager;
     private me.antigravity.fishingeconomy.market.MarketSeasonManager marketSeasonManager;
     private me.antigravity.fishingeconomy.gui.CustomRodGui customRodGui;
+    private me.antigravity.fishingeconomy.fishing.FishCodexManager fishCodexManager;
+    private me.antigravity.fishingeconomy.fishing.OceanicBossRaid oceanicBossRaid;
+    private me.antigravity.fishingeconomy.fishing.AquacultureRigManager aquacultureRigManager;
 
     @Override
     public void onEnable() {
@@ -91,6 +94,9 @@ public class FishingEconomy extends JavaPlugin {
         // Initialize Managers
         this.economyManager = new EconomyManager(this);
         this.fishManager = new FishManager(this);
+        this.fishCodexManager = new me.antigravity.fishingeconomy.fishing.FishCodexManager(this);
+        this.oceanicBossRaid = new me.antigravity.fishingeconomy.fishing.OceanicBossRaid(this);
+        this.aquacultureRigManager = new me.antigravity.fishingeconomy.fishing.AquacultureRigManager(this);
         this.reelingManager = new me.antigravity.fishingeconomy.fishing.ReelingManager(this);
         this.baitManager = new me.antigravity.fishingeconomy.fishing.BaitManager(this);
         this.aquariumManager = new me.antigravity.fishingeconomy.fishing.AquariumManager(this);
@@ -200,6 +206,9 @@ public class FishingEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JobsListener(this), this);
         getServer().getPluginManager().registerEvents(slotsGui, this);
         getServer().getPluginManager().registerEvents(customRodGui, this);
+        getServer().getPluginManager().registerEvents(fishCodexManager, this);
+        getServer().getPluginManager().registerEvents(oceanicBossRaid, this);
+        getServer().getPluginManager().registerEvents(aquacultureRigManager, this);
 
         // Register Vault Economy
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
@@ -358,5 +367,17 @@ public class FishingEconomy extends JavaPlugin {
 
     public me.antigravity.fishingeconomy.gui.CustomRodGui getCustomRodGui() {
         return customRodGui;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.FishCodexManager getFishCodexManager() {
+        return fishCodexManager;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.OceanicBossRaid getOceanicBossRaid() {
+        return oceanicBossRaid;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.AquacultureRigManager getAquacultureRigManager() {
+        return aquacultureRigManager;
     }
 }

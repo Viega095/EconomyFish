@@ -47,6 +47,35 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("codex") || args[0].equalsIgnoreCase("encyclopedia")) {
+            plugin.getFishCodexManager().openCodexGUI(player);
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("rig")) {
+            if (args.length >= 2 && args[1].equalsIgnoreCase("deploy")) {
+                plugin.getAquacultureRigManager().deployRig(player);
+            } else if (args.length >= 2 && args[1].equalsIgnoreCase("collect")) {
+                plugin.getAquacultureRigManager().collectRig(player);
+            } else {
+                plugin.getAquacultureRigManager().openRigGUI(player);
+            }
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("boss")) {
+            if (!player.hasPermission("fishingeconomy.admin")) {
+                player.sendMessage(ChatColor.RED + "No tienes permisos para invocar jefes.");
+                return true;
+            }
+            String type = args.length >= 2 ? args[1] : "kraken";
+            boolean success = plugin.getOceanicBossRaid().spawnOceanicBoss(player.getLocation(), type);
+            if (!success) {
+                player.sendMessage(ChatColor.RED + "¡Ya hay un jefe oceánico activo en el servidor!");
+            }
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("admin")) {
             if (!player.hasPermission("fishingeconomy.admin")) {
                 player.sendMessage(ChatColor.RED + "No tienes permisos de administrador.");
@@ -84,6 +113,12 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
+            if (sub.equals("spawnboss")) {
+                String type = args.length >= 3 ? args[2] : "kraken";
+                plugin.getOceanicBossRaid().spawnOceanicBoss(player.getLocation(), type);
+                return true;
+            }
+
             sendAdminGuide(player);
             return true;
         }
@@ -98,6 +133,8 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
         player.sendMessage(ChatColor.AQUA + "╚════════════════════════════════════════════════╝");
         player.sendMessage(ChatColor.GRAY + "Haz clic en cualquier botón interactivo para probarlo:");
 
+        sendClickable(player, "§6▶ §eEnciclopedia Codex de Peces §7(/fish codex)", "/fish codex", "§aVer todas las especies descubiertas");
+        sendClickable(player, "§6▶ §ePlataforma de Acuicultura Offshore §7(/fish rig)", "/fish rig", "§aGestionar plataforma de pesca pasiva");
         sendClickable(player, "§6▶ §eAstilleros de Cañas Míticas §7(/customrod)", "/customrod", "§aVer y forjar cañas con bonos especiales");
         sendClickable(player, "§6▶ §eMercado de Peces y Venta §7(/fishshop)", "/fishshop", "§aVender peces especiales y ver precios");
         sendClickable(player, "§6▶ §eSubmarino Abisal Nautilus §7(/submarine)", "/submarine", "§aMontar submarino con respiración acuática");
@@ -120,6 +157,8 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
         sendClickable(player, "§d• Forzar Minijuego de Pesca", "/fish admin forcemini", "§eActiva el minijuego de tensión de carrete");
         sendClickable(player, "§d• Obtener Caña Leviatán", "/fish admin giverod LEVIATHAN_BANE", "§eRecibir Caña Perdición del Leviatán");
         sendClickable(player, "§d• Obtener Caña Magmática", "/fish admin giverod MAGMA_FISHER", "§eRecibir Caña de Ignición Magmática");
+        sendClickable(player, "§d• Invocar Kraken Abisal", "/fish boss kraken", "§eInvocar Jefe Mundial Kraken");
+        sendClickable(player, "§d• Invocar Megalodón Ancestral", "/fish boss megalodon", "§eInvocar Jefe Mundial Megalodón");
         sendClickable(player, "§d• Iniciar Torneo de Pesca", "/ftournament start", "§eIniciar torneo global inmediatamente");
         sendClickable(player, "§d• Iniciar Expedición Kraken", "/expedition start", "§eIniciar expedición a aguas profundas");
         player.sendMessage(ChatColor.DARK_PURPLE + "══════════════════════════════════════════════════");
@@ -135,17 +174,27 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("guide", "help", "rod"));
+            List<String> subs = new ArrayList<>(Arrays.asList("guide", "help", "rod", "codex", "rig"));
             if (sender.hasPermission("fishingeconomy.admin")) {
                 subs.add("admin");
+                subs.add("boss");
             }
             return filter(subs, args[0]);
         }
+        if (args.length == 2 && args[0].equalsIgnoreCase("rig")) {
+            return filter(Arrays.asList("gui", "deploy", "collect"), args[1]);
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("boss") && sender.hasPermission("fishingeconomy.admin")) {
+            return filter(Arrays.asList("kraken", "megalodon"), args[1]);
+        }
         if (args.length == 2 && args[0].equalsIgnoreCase("admin") && sender.hasPermission("fishingeconomy.admin")) {
-            return filter(Arrays.asList("forcemythic", "forcemini", "giverod"), args[1]);
+            return filter(Arrays.asList("forcemythic", "forcemini", "giverod", "spawnboss"), args[1]);
         }
         if (args.length == 3 && args[1].equalsIgnoreCase("giverod") && sender.hasPermission("fishingeconomy.admin")) {
             return filter(Arrays.asList("LEVIATHAN_BANE", "MAGMA_FISHER", "SIREN_WEAVER"), args[2]);
+        }
+        if (args.length == 3 && args[1].equalsIgnoreCase("spawnboss") && sender.hasPermission("fishingeconomy.admin")) {
+            return filter(Arrays.asList("kraken", "megalodon"), args[2]);
         }
         return new ArrayList<>();
     }

@@ -100,6 +100,10 @@ public class FishingListener implements Listener {
         // Ensure final message with all placeholders is completely colorized
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.8f, 1.2f);
+
+        if (plugin.getFishCodexManager() != null) {
+            plugin.getFishCodexManager().recordCatch(player, fish.id);
+        }
     }
 
     @EventHandler
