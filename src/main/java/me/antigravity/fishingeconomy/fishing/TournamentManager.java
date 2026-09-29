@@ -80,8 +80,9 @@ public class TournamentManager {
     public void recordCatch(Player player, double scoreValue) {
         if (!active) return;
         scores.put(player.getUniqueId(), scores.getOrDefault(player.getUniqueId(), 0.0) + scoreValue);
-        player.sendActionBar(ChatColor.GOLD + "🎣 [Torneo] +" + String.format("%.1f", scoreValue) + " pts | Puntos Totales: " +
-                String.format("%.1f", scores.get(player.getUniqueId())));
+        player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
+                net.md_5.bungee.api.chat.TextComponent.fromLegacyText(ChatColor.GOLD + "🎣 [Torneo] +" + String.format("%.1f", scoreValue) + " pts | Puntos Totales: " +
+                String.format("%.1f", scores.get(player.getUniqueId()))));
     }
 
     public void endTournament() {

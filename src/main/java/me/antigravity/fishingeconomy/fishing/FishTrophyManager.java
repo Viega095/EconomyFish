@@ -51,7 +51,7 @@ public class FishTrophyManager {
 
         player.getInventory().addItem(plaque);
         player.sendMessage(ChatColor.GOLD + "🏆 [Taxidermia Marina] ¡Has recibido tu placa de trofeo conmemorativa!");
-        player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_PLACE, 1f, 1.2f);
+        player.playSound(player.getLocation(), Sound.BLOCK_WOOD_PLACE, 1f, 1.2f);
         return true;
     }
 }
