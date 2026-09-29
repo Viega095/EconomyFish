@@ -77,6 +77,9 @@ public class FishingEconomy extends JavaPlugin {
     private me.antigravity.fishingeconomy.fishing.TournamentManager tournamentManager;
     private me.antigravity.fishingeconomy.fishing.BreedingTankManager breedingTankManager;
     private me.antigravity.fishingeconomy.fishing.SeaMerchantManager seaMerchantManager;
+    private me.antigravity.fishingeconomy.fishing.FishTrophyManager fishTrophyManager;
+    private me.antigravity.fishingeconomy.fishing.SubmarineManager submarineManager;
+    private me.antigravity.fishingeconomy.market.MarketSeasonManager marketSeasonManager;
 
     @Override
     public void onEnable() {
@@ -100,6 +103,9 @@ public class FishingEconomy extends JavaPlugin {
         this.tournamentManager = new me.antigravity.fishingeconomy.fishing.TournamentManager(this);
         this.breedingTankManager = new me.antigravity.fishingeconomy.fishing.BreedingTankManager(this);
         this.seaMerchantManager = new me.antigravity.fishingeconomy.fishing.SeaMerchantManager(this);
+        this.fishTrophyManager = new me.antigravity.fishingeconomy.fishing.FishTrophyManager(this);
+        this.submarineManager = new me.antigravity.fishingeconomy.fishing.SubmarineManager(this);
+        this.marketSeasonManager = new me.antigravity.fishingeconomy.market.MarketSeasonManager(this);
         this.guiManager = new GuiManager(this);
         this.oresManager = new OresManager(this);
         this.cropsManager = new CropsManager(this);
@@ -144,6 +150,8 @@ public class FishingEconomy extends JavaPlugin {
         getCommand("breedfish").setExecutor(new me.antigravity.fishingeconomy.commands.BreedingCommand(this));
         getCommand("merchant").setExecutor(new me.antigravity.fishingeconomy.commands.SeaMerchantCommand(this));
         getCommand("mapchart").setExecutor(new me.antigravity.fishingeconomy.commands.MapChartCommand(this));
+        getCommand("trophy").setExecutor(new me.antigravity.fishingeconomy.commands.TrophyCommand(this));
+        getCommand("submarine").setExecutor(new me.antigravity.fishingeconomy.commands.SubmarineCommand(this));
 
         // Register Listeners
         getServer().getPluginManager().registerEvents(new FishingListener(this), this);
@@ -303,5 +311,17 @@ public class FishingEconomy extends JavaPlugin {
 
     public me.antigravity.fishingeconomy.fishing.SeaMerchantManager getSeaMerchantManager() {
         return seaMerchantManager;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.FishTrophyManager getFishTrophyManager() {
+        return fishTrophyManager;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.SubmarineManager getSubmarineManager() {
+        return submarineManager;
+    }
+
+    public me.antigravity.fishingeconomy.market.MarketSeasonManager getMarketSeasonManager() {
+        return marketSeasonManager;
     }
 }

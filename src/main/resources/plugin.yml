@@ -82,6 +82,12 @@ commands:
   mapchart:
     description: Get a live candlestick chart map.
     usage: /mapchart [symbol]
+  trophy:
+    description: Fish taxidermy and wall trophy plaques.
+    usage: /trophy
+  submarine:
+    description: Deep-sea submarine vehicle diving.
+    usage: /submarine
 
 permissions:
   fishingeconomy.user:
