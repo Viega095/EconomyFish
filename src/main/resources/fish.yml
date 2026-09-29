@@ -1,0 +1,51 @@
+rarities:
+  COMMON:
+    display: "&fCommon"
+    chance: 60.0
+  RARE:
+    display: "&9Rare"
+    chance: 25.0
+  EPIC:
+    display: "&5Epic"
+    chance: 10.0
+  LEGENDARY:
+    display: "&6Legendary"
+    chance: 5.0
+
+fish:
+  COMMON_COD:
+    rarity: COMMON
+    material: COD
+    name: "&fFresh Cod"
+    lore:
+      - "&7A simple fresh cod."
+      - "&7Value: &a%price%"
+    price: 5.0
+    chance: 50.0
+  RARE_SALMON:
+    rarity: RARE
+    material: SALMON
+    name: "&9Giant Salmon"
+    lore:
+      - "&7A surprisingly large salmon."
+      - "&7Value: &a%price%"
+    price: 25.0
+    chance: 30.0
+  EPIC_PUFFER:
+    rarity: EPIC
+    material: PUFFERFISH
+    name: "&5Golden Puffer"
+    lore:
+      - "&7It glows with a strange light."
+      - "&7Value: &a%price%"
+    price: 100.0
+    chance: 15.0
+  LEGENDARY_NEMO:
+    rarity: LEGENDARY
+    material: TROPICAL_FISH
+    name: "&6Lost Clownfish"
+    lore:
+      - "&7You found him!"
+      - "&7Value: &a%price%"
+    price: 500.0
+    chance: 5.0

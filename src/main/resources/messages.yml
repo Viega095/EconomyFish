@@ -1,0 +1,20 @@
+prefix: "&8[&bFishingEconomy&8] "
+no-permission: "&cYou don't have permission to do that."
+player-only: "&cThis command can only be used by players."
+player-not-found: "&cPlayer not found."
+invalid-amount: "&cInvalid amount."
+insufficient-funds: "&cInsufficient funds."
+
+balance:
+  self: "&7Your balance: &a%balance%"
+  other: "&7%player%'s balance: &a%balance%"
+  set: "&7Set %player%'s balance to &a%balance%"
+  add: "&7Added &a%amount% &7to %player%'s balance. New balance: &a%balance%"
+  take: "&7Took &a%amount% &7from %player%'s balance. New balance: &a%balance%"
+  pay-sent: "&7You sent &a%amount% &7to &e%player%&7."
+  pay-received: "&e%player% &7sent you &a%amount%&7."
+
+fishing:
+  caught: "&7You caught a %rarity% &f%fish%&7! Value: &a%value%"
+  sold-all: "&7You sold &e%count% &7special fish for &a%total%&7."
+  no-fish-to-sell: "&cYou don't have any special fish to sell."

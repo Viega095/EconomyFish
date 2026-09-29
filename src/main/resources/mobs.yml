@@ -1,0 +1,21 @@
+mobs:
+  ZOMBIE:
+    price: 5.0
+  SKELETON:
+    price: 5.0
+  SPIDER:
+    price: 5.0
+  CREEPER:
+    price: 10.0
+  ENDERMAN:
+    price: 15.0
+  WITCH:
+    price: 15.0
+  BLAZE:
+    price: 20.0
+  GHAST:
+    price: 50.0
+  ENDER_DRAGON:
+    price: 1000.0
+  WITHER:
+    price: 500.0

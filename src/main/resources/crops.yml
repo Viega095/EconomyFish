@@ -1,0 +1,19 @@
+crops:
+  WHEAT:
+    price: 1.0
+  CARROT:
+    price: 1.0
+  POTATO:
+    price: 1.0
+  BEETROOT:
+    price: 1.0
+  MELON_SLICE:
+    price: 0.5
+  PUMPKIN:
+    price: 2.0
+  SUGAR_CANE:
+    price: 1.5
+  COCOA_BEANS:
+    price: 2.0
+  NETHER_WART:
+    price: 3.0

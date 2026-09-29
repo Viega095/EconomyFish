@@ -1,0 +1,14 @@
+# FishingEconomy Configuration
+
+currency:
+  name: "Coins"
+  symbol: "$"
+  format: "%amount% %symbol%"
+
+starting-balance: 0.0
+
+# Settings for fishing
+fishing:
+  replace-vanilla-loot: true # If true, only custom fish will be caught. If false, custom fish are added to the pool.
+
+# Messages are in messages.yml

@@ -1,0 +1,92 @@
+name: FishingEconomy
+version: '${project.version}'
+main: me.antigravity.fishingeconomy.FishingEconomy
+api-version: '1.20'
+authors: [Antigravity]
+description: A lightweight economy plugin with fishing integration.
+depend: [Vault]
+
+commands:
+  balance:
+    description: Check your balance.
+    aliases: [bal, money]
+    usage: /balance
+  pay:
+    description: Pay another player.
+    usage: /pay <player> <amount>
+  baltop:
+    description: View top richest players.
+    usage: /baltop
+  eco:
+    description: Admin economy commands.
+    usage: /eco <set|add|take|gui> [player] [amount]
+    permission: fishingeconomy.admin
+  fishshop:
+    description: Open the fish shop.
+    usage: /fishshop
+  sellall:
+    description: Sell all ores in inventory.
+    usage: /sellall
+  jobs:
+    description: Open jobs menu.
+    usage: /jobs
+  bank:
+    description: Open bank menu.
+    usage: /bank
+  stockmarket:
+    description: Open stock market menu.
+    usage: /stockmarket
+  bounty:
+    description: Manage bounties.
+    usage: /bounty <set/list>
+  coinflip:
+    description: Gamble your money.
+    usage: /coinflip [amount]
+  trade:
+    description: Trade with other players.
+    usage: /trade <player>
+  ah:
+    description: Open auction house.
+    usage: /ah [sell <price>]
+  farming:
+    description: Open farming market.
+    usage: /farming
+  slots:
+    description: Play slots.
+    usage: /slots
+  corp:
+    description: Manage player corporations and stock trading.
+    usage: /corp <create|invest|dividend|list>
+  bonds:
+    description: Treasury bonds and credit scoring.
+    usage: /bonds <buy|claim>
+  property:
+    description: Real estate stalls and commercial properties.
+    aliases: [realestate]
+    usage: /property <list|buy>
+  expedition:
+    description: Deep-sea oceanic expeditions and Kraken encounters.
+    usage: /expedition start
+  customrod:
+    description: Mythic modular fishing rods.
+    usage: /customrod <list|buy>
+  ftournament:
+    description: Automated fishing tournaments and derbies.
+    usage: /ftournament <status|start|end>
+  breedfish:
+    description: Fish breeding and aquaculture mutations.
+    usage: /breedfish
+  merchant:
+    description: Ocean merchant galleon and black market goods.
+    usage: /merchant <list|buy>
+  mapchart:
+    description: Get a live candlestick chart map.
+    usage: /mapchart [symbol]
+
+permissions:
+  fishingeconomy.user:
+    description: Allow basic economy commands.
+    default: true
+  fishingeconomy.admin:
+    description: Allow admin economy commands.
+    default: op

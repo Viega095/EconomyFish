@@ -1,0 +1,39 @@
+ores:
+  COAL_ORE:
+    price: 2.0
+  DEEPSLATE_COAL_ORE:
+    price: 2.0
+  IRON_ORE:
+    price: 5.0
+  DEEPSLATE_IRON_ORE:
+    price: 5.0
+  GOLD_ORE:
+    price: 10.0
+  DEEPSLATE_GOLD_ORE:
+    price: 10.0
+  DIAMOND_ORE:
+    price: 50.0
+  DEEPSLATE_DIAMOND_ORE:
+    price: 50.0
+  EMERALD_ORE:
+    price: 100.0
+  DEEPSLATE_EMERALD_ORE:
+    price: 100.0
+  LAPIS_ORE:
+    price: 3.0
+  DEEPSLATE_LAPIS_ORE:
+    price: 3.0
+  REDSTONE_ORE:
+    price: 3.0
+  DEEPSLATE_REDSTONE_ORE:
+    price: 3.0
+  COPPER_ORE:
+    price: 4.0
+  DEEPSLATE_COPPER_ORE:
+    price: 4.0
+  NETHER_QUARTZ_ORE:
+    price: 3.0
+  NETHER_GOLD_ORE:
+    price: 3.0
+  ANCIENT_DEBRIS:
+    price: 200.0
