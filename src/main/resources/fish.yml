@@ -1,16 +1,19 @@
 rarities:
   COMMON:
     display: "&fCommon"
-    chance: 60.0
+    chance: 50.0
   RARE:
     display: "&9Rare"
     chance: 25.0
   EPIC:
     display: "&5Epic"
-    chance: 10.0
+    chance: 15.0
   LEGENDARY:
     display: "&6Legendary"
-    chance: 5.0
+    chance: 8.0
+  MYTHIC:
+    display: "&dMythic"
+    chance: 2.0
 
 fish:
   COMMON_COD:
@@ -20,32 +23,60 @@ fish:
     lore:
       - "&7A simple fresh cod."
       - "&7Value: &a%price%"
-    price: 5.0
+    price: 15.0
+    chance: 50.0
+  COMMON_SALMON:
+    rarity: COMMON
+    material: SALMON
+    name: "&fRiver Salmon"
+    lore:
+      - "&7A standard fresh river salmon."
+      - "&7Value: &a%price%"
+    price: 25.0
     chance: 50.0
   RARE_SALMON:
     rarity: RARE
     material: SALMON
-    name: "&9Giant Salmon"
+    name: "&9Giant King Salmon"
     lore:
-      - "&7A surprisingly large salmon."
+      - "&7A surprisingly massive salmon from deep currents."
       - "&7Value: &a%price%"
-    price: 25.0
+    price: 80.0
     chance: 30.0
+  RARE_TUNA:
+    rarity: RARE
+    material: COOKED_SALMON
+    name: "&9Bluefin Deep Tuna"
+    lore:
+      - "&7Prized by gourmet chefs across the realm."
+      - "&7Value: &a%price%"
+    price: 150.0
+    chance: 20.0
   EPIC_PUFFER:
     rarity: EPIC
     material: PUFFERFISH
-    name: "&5Golden Puffer"
+    name: "&5Golden Toxic Puffer"
     lore:
-      - "&7It glows with a strange light."
+      - "&7It glows with a strange bio-luminescent light."
       - "&7Value: &a%price%"
-    price: 100.0
+    price: 450.0
     chance: 15.0
   LEGENDARY_NEMO:
     rarity: LEGENDARY
     material: TROPICAL_FISH
-    name: "&6Lost Clownfish"
+    name: "&6Lost Crown Clownfish"
     lore:
-      - "&7You found him!"
+      - "&7You found the emperor of coral reefs!"
       - "&7Value: &a%price%"
-    price: 500.0
+    price: 1500.0
     chance: 5.0
+  MYTHIC_MEGALODON:
+    rarity: MYTHIC
+    material: NAUTILUS_SHELL
+    name: "&d&l✦ Ancient Megalodon Scale ✦"
+    lore:
+      - "&7Harvested from the apex predator of the forgotten abyss."
+      - "&eAncient Relic: Worth a king's ransom."
+      - "&7Value: &a%price%"
+    price: 10000.0
+    chance: 2.0

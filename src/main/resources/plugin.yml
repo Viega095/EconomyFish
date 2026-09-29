@@ -69,7 +69,12 @@ commands:
     usage: /expedition start
   customrod:
     description: Mythic modular fishing rods.
-    usage: /customrod <list|buy>
+    aliases: [rods, customrods, fishrod]
+    usage: /customrod <gui|list|buy|give>
+  fish:
+    description: Master Fishing Economy interactive guide and test command.
+    aliases: [fishing, fguide]
+    usage: /fish [guide|admin|rod]
   ftournament:
     description: Automated fishing tournaments and derbies.
     usage: /ftournament <status|start|end>

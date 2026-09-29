@@ -1,8 +1,6 @@
 package me.antigravity.fishingeconomy;
 
-import me.antigravity.fishingeconomy.commands.AdminCommand;
-import me.antigravity.fishingeconomy.commands.EconomyCommand;
-import me.antigravity.fishingeconomy.commands.FishShopCommand;
+import me.antigravity.fishingeconomy.commands.*;
 import me.antigravity.fishingeconomy.market.StockMarketGui;
 import me.antigravity.fishingeconomy.commands.StockMarketCommand;
 import me.antigravity.fishingeconomy.bounties.BountyManager;
@@ -80,6 +78,7 @@ public class FishingEconomy extends JavaPlugin {
     private me.antigravity.fishingeconomy.fishing.FishTrophyManager fishTrophyManager;
     private me.antigravity.fishingeconomy.fishing.SubmarineManager submarineManager;
     private me.antigravity.fishingeconomy.market.MarketSeasonManager marketSeasonManager;
+    private me.antigravity.fishingeconomy.gui.CustomRodGui customRodGui;
 
     @Override
     public void onEnable() {
@@ -124,31 +123,62 @@ public class FishingEconomy extends JavaPlugin {
         this.auctionGui = new AuctionGui(this);
         this.farmingGui = new FarmingGui(this);
         this.slotsGui = new SlotsGui(this);
+        this.customRodGui = new me.antigravity.fishingeconomy.gui.CustomRodGui(this);
 
-        // Register Commands
-        getCommand("balance").setExecutor(new EconomyCommand(this));
-        getCommand("pay").setExecutor(new EconomyCommand(this));
-        getCommand("baltop").setExecutor(new EconomyCommand(this));
-        getCommand("eco").setExecutor(new AdminCommand(this));
+        // Register Commands & TabCompleters
+        EconomyCommand ecoCmd = new EconomyCommand(this);
+        getCommand("balance").setExecutor(ecoCmd);
+        getCommand("pay").setExecutor(ecoCmd);
+        getCommand("baltop").setExecutor(ecoCmd);
+
+        AdminCommand adminCmd = new AdminCommand(this);
+        EconomyTabCompleter ecoTab = new EconomyTabCompleter(this);
+        getCommand("eco").setExecutor(adminCmd);
+        getCommand("eco").setTabCompleter(ecoTab);
+
         getCommand("fishshop").setExecutor(new FishShopCommand(this));
         getCommand("sellall").setExecutor(new SellAllCommand(this));
         getCommand("jobs").setExecutor(new JobsCommand(this));
         getCommand("bank").setExecutor(new BankCommand(this));
         getCommand("stockmarket").setExecutor(new StockMarketCommand(this));
+
         getCommand("bounty").setExecutor(new BountyCommand(this));
+        getCommand("bounty").setTabCompleter(ecoTab);
+
         getCommand("coinflip").setExecutor(new CoinflipCommand(this));
         getCommand("trade").setExecutor(new TradeCommand(this));
         getCommand("ah").setExecutor(new AuctionCommand(this));
         getCommand("farming").setExecutor(new FarmingCommand(this));
         getCommand("slots").setExecutor(new SlotsCommand(this));
+
         getCommand("corp").setExecutor(new me.antigravity.fishingeconomy.commands.CorporationCommand(this));
+        getCommand("corp").setTabCompleter(ecoTab);
+
         getCommand("bonds").setExecutor(new me.antigravity.fishingeconomy.commands.BondsCommand(this));
+        getCommand("bonds").setTabCompleter(ecoTab);
+
         getCommand("property").setExecutor(new me.antigravity.fishingeconomy.commands.RealEstateCommand(this));
+        getCommand("property").setTabCompleter(ecoTab);
+
         getCommand("expedition").setExecutor(new me.antigravity.fishingeconomy.commands.ExpeditionCommand(this));
-        getCommand("customrod").setExecutor(new me.antigravity.fishingeconomy.commands.CustomRodsCommand(this));
+        getCommand("expedition").setTabCompleter(ecoTab);
+
+        CustomRodsCommand rodCmd = new me.antigravity.fishingeconomy.commands.CustomRodsCommand(this);
+        getCommand("customrod").setExecutor(rodCmd);
+        getCommand("customrod").setTabCompleter(rodCmd);
+
+        FishGuideCommand fishGuideCmd = new me.antigravity.fishingeconomy.commands.FishGuideCommand(this);
+        getCommand("fish").setExecutor(fishGuideCmd);
+        getCommand("fish").setTabCompleter(fishGuideCmd);
+
         getCommand("ftournament").setExecutor(new me.antigravity.fishingeconomy.commands.TournamentCommand(this));
+        getCommand("ftournament").setTabCompleter(ecoTab);
+
         getCommand("breedfish").setExecutor(new me.antigravity.fishingeconomy.commands.BreedingCommand(this));
+
         getCommand("merchant").setExecutor(new me.antigravity.fishingeconomy.commands.SeaMerchantCommand(this));
+        getCommand("merchant").setTabCompleter(ecoTab);
+
         getCommand("mapchart").setExecutor(new me.antigravity.fishingeconomy.commands.MapChartCommand(this));
         getCommand("trophy").setExecutor(new me.antigravity.fishingeconomy.commands.TrophyCommand(this));
         getCommand("submarine").setExecutor(new me.antigravity.fishingeconomy.commands.SubmarineCommand(this));
@@ -169,6 +199,7 @@ public class FishingEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(farmingGui, this);
         getServer().getPluginManager().registerEvents(new JobsListener(this), this);
         getServer().getPluginManager().registerEvents(slotsGui, this);
+        getServer().getPluginManager().registerEvents(customRodGui, this);
 
         // Register Vault Economy
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
@@ -323,5 +354,9 @@ public class FishingEconomy extends JavaPlugin {
 
     public me.antigravity.fishingeconomy.market.MarketSeasonManager getMarketSeasonManager() {
         return marketSeasonManager;
+    }
+
+    public me.antigravity.fishingeconomy.gui.CustomRodGui getCustomRodGui() {
+        return customRodGui;
     }
 }

@@ -79,6 +79,13 @@ public class SlotsGui implements Listener, InventoryHolder {
         }
     }
 
+    @EventHandler
+    public void onDrag(org.bukkit.event.inventory.InventoryDragEvent event) {
+        if (event.getInventory().getHolder() == this) {
+            event.setCancelled(true);
+        }
+    }
+
     private void spin(Player player) {
         new BukkitRunnable() {
             int ticks = 0;

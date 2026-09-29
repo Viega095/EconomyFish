@@ -2,7 +2,8 @@ package me.antigravity.fishingeconomy.fishing;
 
 import me.antigravity.fishingeconomy.FishingEconomy;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.FishHook;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +15,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class FishingListener implements Listener {
     private final FishingEconomy plugin;
@@ -43,34 +45,61 @@ public class FishingListener implements Listener {
                 }
             }
 
-            FishManager.CustomFish fish = plugin.getFishManager().rollFish();
+            FishManager.CustomFish fish = plugin.getFishManager().rollFish(player);
             if (fish != null) {
-                // If the fish is Rare, Epic, Legendary or Mythic, start the interactive reeling minigame!
+                // Check if interactive reeling minigame should start
                 boolean isHighRarity = !fish.rarity.equalsIgnoreCase("COMMON");
-                if (isHighRarity && plugin.getReelingManager() != null && event.getHook() != null) {
+                boolean isForcedMinigame = plugin.getFishManager().isForceMinigame(player.getUniqueId());
+                if (isForcedMinigame) {
+                    plugin.getFishManager().setForceMinigame(player.getUniqueId(), false);
+                }
+
+                if ((isHighRarity || isForcedMinigame) && plugin.getReelingManager() != null && event.getHook() != null) {
                     event.setCancelled(true);
                     plugin.getReelingManager().startSession(player, event.getHook(), fish);
                     return;
                 }
 
-                // Otherwise, normal catch
-                ItemStack fishItem = plugin.getFishManager().createFishItem(fish);
-                HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(fishItem);
-                if (!leftOver.isEmpty()) {
-                    player.getWorld().dropItemNaturally(player.getLocation(), fishItem);
-                }
+                // Normal catch process
+                giveFishToPlayer(player, fish);
 
-                String msg = plugin.getConfigManager().getMessage("fishing.caught")
-                        .replace("%rarity%", plugin.getConfigManager().getFishConfig().getString("rarities." + fish.rarity + ".display", fish.rarity))
-                        .replace("%fish%", fish.name)
-                        .replace("%value%", plugin.getEconomyManager().format(fish.price));
-                player.sendMessage(msg);
+                // Custom Rod Bonuses
+                ItemStack mainHand = player.getInventory().getItemInMainHand();
+                if (plugin.getRodCraftingManager() != null && plugin.getRodCraftingManager().isCustomRod(mainHand)) {
+                    double doubleCatchBonus = plugin.getRodCraftingManager().getDoubleCatchBonus(mainHand);
+                    if (ThreadLocalRandom.current().nextDouble() < doubleCatchBonus) {
+                        player.sendMessage(ChatColor.GOLD + "✦ [Caña Mítica] ¡Efecto de Doble Captura Activado!");
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1.8f);
+                        FishManager.CustomFish extraFish = plugin.getFishManager().rollFish(player);
+                        if (extraFish != null) {
+                            giveFishToPlayer(player, extraFish);
+                        }
+                    }
+                }
             }
         } else if (event.getState() == PlayerFishEvent.State.REEL_IN || event.getState() == PlayerFishEvent.State.IN_GROUND) {
             if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
                 plugin.getReelingManager().handleClick(player);
             }
         }
+    }
+
+    private void giveFishToPlayer(Player player, FishManager.CustomFish fish) {
+        ItemStack fishItem = plugin.getFishManager().createFishItem(fish);
+        HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(fishItem);
+        if (!leftOver.isEmpty()) {
+            player.getWorld().dropItemNaturally(player.getLocation(), fishItem);
+        }
+
+        String rawRarity = plugin.getConfigManager().getFishConfig().getString("rarities." + fish.rarity + ".display", fish.rarity);
+        String msg = plugin.getConfigManager().getMessage("fishing.caught")
+                .replace("%rarity%", rawRarity)
+                .replace("%fish%", fish.name)
+                .replace("%value%", plugin.getEconomyManager().format(fish.price));
+        
+        // Ensure final message with all placeholders is completely colorized
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.8f, 1.2f);
     }
 
     @EventHandler

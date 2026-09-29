@@ -45,10 +45,15 @@ public class ConfigManager {
         return messagesConfig;
     }
 
+    public static String colorize(String text) {
+        if (text == null) return "";
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', text);
+    }
+
     public String getMessage(String path) {
         String msg = messagesConfig.getString(path);
         if (msg == null)
             return "Message not found: " + path;
-        return msg.replace("&", "§");
+        return colorize(msg);
     }
 }
