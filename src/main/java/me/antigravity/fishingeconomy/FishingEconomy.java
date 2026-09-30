@@ -88,6 +88,7 @@ public class FishingEconomy extends JavaPlugin {
     private me.antigravity.fishingeconomy.updater.UpdateManager updateManager;
     private me.antigravity.fishingeconomy.gear.DivingSuitManager divingSuitManager;
     private me.antigravity.fishingeconomy.fishing.RodEnchantManager rodEnchantManager;
+    private me.antigravity.fishingeconomy.gui.FishTestLabGUI fishTestLabGUI;
 
     @Override
     public void onEnable() {
@@ -108,6 +109,7 @@ public class FishingEconomy extends JavaPlugin {
         this.oceanWeatherAndTides = new me.antigravity.fishingeconomy.fishing.OceanWeatherAndTides(this);
         this.divingSuitManager = new me.antigravity.fishingeconomy.gear.DivingSuitManager(this);
         this.rodEnchantManager = new me.antigravity.fishingeconomy.fishing.RodEnchantManager(this);
+        this.fishTestLabGUI = new me.antigravity.fishingeconomy.gui.FishTestLabGUI(this);
         this.updateManager = new me.antigravity.fishingeconomy.updater.UpdateManager(this);
         this.updateManager.startAsyncCheck();
         this.reelingManager = new me.antigravity.fishingeconomy.fishing.ReelingManager(this);
@@ -226,6 +228,7 @@ public class FishingEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(deepSeaTreasureSalvage, this);
         getServer().getPluginManager().registerEvents(divingSuitManager, this);
         getServer().getPluginManager().registerEvents(rodEnchantManager, this);
+        getServer().getPluginManager().registerEvents(fishTestLabGUI, this);
         getServer().getPluginManager().registerEvents(updateManager, this);
 
         // Register Vault Economy
@@ -421,5 +424,9 @@ public class FishingEconomy extends JavaPlugin {
 
     public me.antigravity.fishingeconomy.fishing.RodEnchantManager getRodEnchantManager() {
         return rodEnchantManager;
+    }
+
+    public me.antigravity.fishingeconomy.gui.FishTestLabGUI getFishTestLabGUI() {
+        return fishTestLabGUI;
     }
 }

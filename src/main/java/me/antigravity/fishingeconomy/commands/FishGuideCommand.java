@@ -58,6 +58,11 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("test") || args[0].equalsIgnoreCase("lab") || args[0].equalsIgnoreCase("demo")) {
+            plugin.getFishTestLabGUI().open(player);
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("suit") || args[0].equalsIgnoreCase("suits") || args[0].equalsIgnoreCase("gear")) {
             plugin.getDivingSuitManager().openShopGUI(player);
             return true;
@@ -190,8 +195,7 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
         player.sendMessage(ChatColor.AQUA + "╔════════════════════════════════════════════════╗");
         player.sendMessage(ChatColor.AQUA + "║     " + ChatColor.GOLD + "🎣 GUÍA MAESTRA DE ECONOMY FISH" + ChatColor.AQUA + "     ║");
         player.sendMessage(ChatColor.AQUA + "╚════════════════════════════════════════════════╝");
-        player.sendMessage(ChatColor.GRAY + "Haz clic en cualquier botón interactivo para probarlo:");
-
+        sendClickable(player, "§b🧪 §l[ABRIR PANEL MAESTRO DE PRUEBAS GUI]", "/fish test", "§aAbre el laboratorio visual con todas las opciones de testeo");
         sendClickable(player, "§6▶ §eAltar de Encantamientos de Caña §7(/fish enchant)", "/fish enchant", "§aAplicar encantamientos marinos especiales a tu caña");
         sendClickable(player, "§6▶ §eEquipo y Traje de Buceo Abisal §7(/fish suit)", "/fish suit", "§aComprar y equipar armadura de inmersión profunda");
         sendClickable(player, "§6▶ §eCaldero Alquímico de Cebos §7(/fish bait)", "/fish bait", "§aElaborar cebos biológicos y míticos");
@@ -239,7 +243,7 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("guide", "help", "rod", "codex", "rig", "bait", "tides", "suit", "enchant"));
+            List<String> subs = new ArrayList<>(Arrays.asList("guide", "help", "test", "lab", "demo", "rod", "codex", "rig", "bait", "tides", "suit", "enchant"));
             if (sender.hasPermission("fishingeconomy.admin")) {
                 subs.add("admin");
                 subs.add("boss");
