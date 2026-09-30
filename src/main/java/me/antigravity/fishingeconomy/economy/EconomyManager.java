@@ -105,6 +105,26 @@ public class EconomyManager {
         return hasBalance(player, amount);
     }
 
+    public boolean has(UUID uuid, double amount) {
+        return balanceCache.getOrDefault(uuid, plugin.getConfig().getDouble("starting-balance", 0.0)) >= amount;
+    }
+
+    public void withdraw(UUID uuid, double amount) {
+        double current = balanceCache.getOrDefault(uuid, plugin.getConfig().getDouble("starting-balance", 0.0));
+        balanceCache.put(uuid, Math.max(0, current - amount));
+        saveAsync();
+    }
+
+    public void deposit(UUID uuid, double amount) {
+        double current = balanceCache.getOrDefault(uuid, plugin.getConfig().getDouble("starting-balance", 0.0));
+        balanceCache.put(uuid, current + amount);
+        saveAsync();
+    }
+
+    public double getBalance(UUID uuid) {
+        return balanceCache.getOrDefault(uuid, plugin.getConfig().getDouble("starting-balance", 0.0));
+    }
+
     public String format(double amount) {
         String symbol = plugin.getConfig().getString("currency.symbol", "$");
         String format = plugin.getConfig().getString("currency.format", "%amount% %symbol%");

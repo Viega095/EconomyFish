@@ -222,22 +222,33 @@ public class ReelingManager {
         }
 
         private void onCatchSuccess() {
+            ItemStack rod = player.getInventory().getItemInMainHand();
+            boolean hasNeptuneBlessing = plugin.getRodEnchantManager() != null && plugin.getRodEnchantManager().hasEnchant(rod, RodEnchantManager.RodEnchant.NEPTUNE_BLESSING);
+            boolean hasMagneticPull = plugin.getRodEnchantManager() != null && plugin.getRodEnchantManager().hasEnchant(rod, RodEnchantManager.RodEnchant.MAGNETIC_PULL);
+
             ItemStack fishItem = plugin.getFishManager().createFishItem(fish);
             HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(fishItem);
             if (!leftOver.isEmpty()) {
                 player.getWorld().dropItemNaturally(player.getLocation(), fishItem);
+            } else if (hasMagneticPull) {
+                player.spawnParticle(Particle.PORTAL, player.getLocation().add(0, 1, 0), 15, 0.2, 0.2, 0.2, 0.5);
             }
 
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1.4f);
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.8f, 1.2f);
             player.spawnParticle(Particle.TOTEM, player.getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
 
+            double finalPrice = hasNeptuneBlessing ? (fish.price * 1.30) : fish.price;
+
             String rawRarity = plugin.getConfigManager().getFishConfig().getString("rarities." + fish.rarity + ".display", fish.rarity);
             String msg = plugin.getConfigManager().getMessage("fishing.caught")
                     .replace("%rarity%", rawRarity)
                     .replace("%fish%", fish.name)
-                    .replace("%value%", plugin.getEconomyManager().format(fish.price));
+                    .replace("%value%", plugin.getEconomyManager().format(finalPrice));
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+            if (hasNeptuneBlessing) {
+                player.sendMessage(ChatColor.GOLD + "🔱 [Bendición de Neptuno] ¡+30% de valor otorgado a esta captura!");
+            }
 
             if (plugin.getFishCodexManager() != null) {
                 plugin.getFishCodexManager().recordCatch(player, fish.id);

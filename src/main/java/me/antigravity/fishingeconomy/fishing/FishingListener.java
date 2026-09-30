@@ -3,6 +3,7 @@ package me.antigravity.fishingeconomy.fishing;
 import me.antigravity.fishingeconomy.FishingEconomy;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -45,7 +46,21 @@ public class FishingListener implements Listener {
                 }
             }
 
+            // Apply Rod Enchants & Custom Rod Roll Bonus
+            ItemStack rod = player.getInventory().getItemInMainHand();
+            boolean hasAbyssalCall = plugin.getRodEnchantManager() != null && plugin.getRodEnchantManager().hasEnchant(rod, RodEnchantManager.RodEnchant.ABYSSAL_CALL);
+
             FishManager.CustomFish fish = plugin.getFishManager().rollFish(player);
+            if (fish != null && hasAbyssalCall && fish.rarity.equalsIgnoreCase("COMMON") && ThreadLocalRandom.current().nextDouble() < 0.35) {
+                // Abyssal Call triggers high-rarity upgrade
+                FishManager.CustomFish upgraded = plugin.getFishManager().rollFish(player);
+                if (upgraded != null && !upgraded.rarity.equalsIgnoreCase("COMMON")) {
+                    fish = upgraded;
+                    player.sendMessage(ChatColor.DARK_PURPLE + "✦ [Llamada Abisal] ¡Tu caña ha atraído a un ser de las profundidades!");
+                    player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 0.7f, 1.6f);
+                }
+            }
+
             if (fish != null) {
                 // Check if interactive reeling minigame should start
                 boolean isHighRarity = !fish.rarity.equalsIgnoreCase("COMMON");
@@ -61,18 +76,17 @@ public class FishingListener implements Listener {
                 }
 
                 // Normal catch process
-                giveFishToPlayer(player, fish);
+                giveFishToPlayer(player, fish, rod);
 
                 // Custom Rod Bonuses
-                ItemStack mainHand = player.getInventory().getItemInMainHand();
-                if (plugin.getRodCraftingManager() != null && plugin.getRodCraftingManager().isCustomRod(mainHand)) {
-                    double doubleCatchBonus = plugin.getRodCraftingManager().getDoubleCatchBonus(mainHand);
+                if (plugin.getRodCraftingManager() != null && plugin.getRodCraftingManager().isCustomRod(rod)) {
+                    double doubleCatchBonus = plugin.getRodCraftingManager().getDoubleCatchBonus(rod);
                     if (ThreadLocalRandom.current().nextDouble() < doubleCatchBonus) {
                         player.sendMessage(ChatColor.GOLD + "✦ [Caña Mítica] ¡Efecto de Doble Captura Activado!");
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1.8f);
                         FishManager.CustomFish extraFish = plugin.getFishManager().rollFish(player);
                         if (extraFish != null) {
-                            giveFishToPlayer(player, extraFish);
+                            giveFishToPlayer(player, extraFish, rod);
                         }
                     }
                 }
@@ -85,29 +99,41 @@ public class FishingListener implements Listener {
         }
     }
 
-    private void giveFishToPlayer(Player player, FishManager.CustomFish fish) {
+    public void giveFishToPlayer(Player player, FishManager.CustomFish fish, ItemStack rod) {
+        boolean hasMagneticPull = plugin.getRodEnchantManager() != null && plugin.getRodEnchantManager().hasEnchant(rod, RodEnchantManager.RodEnchant.MAGNETIC_PULL);
+        boolean hasNeptuneBlessing = plugin.getRodEnchantManager() != null && plugin.getRodEnchantManager().hasEnchant(rod, RodEnchantManager.RodEnchant.NEPTUNE_BLESSING);
+        boolean hasSonar = plugin.getRodEnchantManager() != null && plugin.getRodEnchantManager().hasEnchant(rod, RodEnchantManager.RodEnchant.BIOLUMINESCENT_SONAR);
+
         ItemStack fishItem = plugin.getFishManager().createFishItem(fish);
         HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(fishItem);
         if (!leftOver.isEmpty()) {
             player.getWorld().dropItemNaturally(player.getLocation(), fishItem);
+        } else if (hasMagneticPull) {
+            player.spawnParticle(Particle.PORTAL, player.getLocation().add(0, 1, 0), 15, 0.2, 0.2, 0.2, 0.5);
         }
+
+        double finalPrice = hasNeptuneBlessing ? (fish.price * 1.30) : fish.price;
 
         String rawRarity = plugin.getConfigManager().getFishConfig().getString("rarities." + fish.rarity + ".display", fish.rarity);
         String msg = plugin.getConfigManager().getMessage("fishing.caught")
                 .replace("%rarity%", rawRarity)
                 .replace("%fish%", fish.name)
-                .replace("%value%", plugin.getEconomyManager().format(fish.price));
+                .replace("%value%", plugin.getEconomyManager().format(finalPrice));
         
         // Ensure final message with all placeholders is completely colorized
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+        if (hasNeptuneBlessing) {
+            player.sendMessage(ChatColor.GOLD + "🔱 [Bendición de Neptuno] ¡+30% de valor otorgado a esta captura!");
+        }
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.8f, 1.2f);
 
         if (plugin.getFishCodexManager() != null) {
             plugin.getFishCodexManager().recordCatch(player, fish.id);
         }
 
-        // Deep Sea Treasure Salvage chance
-        if (plugin.getDeepSeaTreasureSalvage() != null && ThreadLocalRandom.current().nextDouble() < 0.08) {
+        // Deep Sea Treasure Salvage chance (boosted with Sonar)
+        double salvageChance = hasSonar ? 0.25 : 0.08;
+        if (plugin.getDeepSeaTreasureSalvage() != null && ThreadLocalRandom.current().nextDouble() < salvageChance) {
             DeepSeaTreasureSalvage.SalvageTier[] tiers = DeepSeaTreasureSalvage.SalvageTier.values();
             DeepSeaTreasureSalvage.SalvageTier rolledTier = tiers[ThreadLocalRandom.current().nextInt(tiers.length)];
             ItemStack crate = plugin.getDeepSeaTreasureSalvage().createSalvageItem(rolledTier);

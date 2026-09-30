@@ -38,11 +38,17 @@ public class ConfigManager {
     }
 
     public FileConfiguration getFishConfig() {
-        return fishConfig;
+        if (fishConfig == null) {
+            loadConfigs();
+        }
+        return fishConfig != null ? fishConfig : new YamlConfiguration();
     }
 
     public FileConfiguration getMessagesConfig() {
-        return messagesConfig;
+        if (messagesConfig == null) {
+            loadConfigs();
+        }
+        return messagesConfig != null ? messagesConfig : new YamlConfiguration();
     }
 
     public static String colorize(String text) {
@@ -51,9 +57,16 @@ public class ConfigManager {
     }
 
     public String getMessage(String path) {
+        if (messagesConfig == null) {
+            loadConfigs();
+        }
+        if (messagesConfig == null) {
+            return colorize("&7" + path);
+        }
         String msg = messagesConfig.getString(path);
-        if (msg == null)
-            return "Message not found: " + path;
+        if (msg == null) {
+            return colorize("&7" + path);
+        }
         return colorize(msg);
     }
 }
