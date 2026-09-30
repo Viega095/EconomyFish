@@ -85,6 +85,7 @@ public class FishingEconomy extends JavaPlugin {
     private me.antigravity.fishingeconomy.fishing.BaitCraftingStation baitCraftingStation;
     private me.antigravity.fishingeconomy.fishing.DeepSeaTreasureSalvage deepSeaTreasureSalvage;
     private me.antigravity.fishingeconomy.fishing.OceanWeatherAndTides oceanWeatherAndTides;
+    private me.antigravity.fishingeconomy.updater.UpdateManager updateManager;
 
     @Override
     public void onEnable() {
@@ -103,6 +104,8 @@ public class FishingEconomy extends JavaPlugin {
         this.baitCraftingStation = new me.antigravity.fishingeconomy.fishing.BaitCraftingStation(this);
         this.deepSeaTreasureSalvage = new me.antigravity.fishingeconomy.fishing.DeepSeaTreasureSalvage(this);
         this.oceanWeatherAndTides = new me.antigravity.fishingeconomy.fishing.OceanWeatherAndTides(this);
+        this.updateManager = new me.antigravity.fishingeconomy.updater.UpdateManager(this);
+        this.updateManager.startAsyncCheck();
         this.reelingManager = new me.antigravity.fishingeconomy.fishing.ReelingManager(this);
         this.baitManager = new me.antigravity.fishingeconomy.fishing.BaitManager(this);
         this.aquariumManager = new me.antigravity.fishingeconomy.fishing.AquariumManager(this);
@@ -217,6 +220,7 @@ public class FishingEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(aquacultureRigManager, this);
         getServer().getPluginManager().registerEvents(baitCraftingStation, this);
         getServer().getPluginManager().registerEvents(deepSeaTreasureSalvage, this);
+        getServer().getPluginManager().registerEvents(updateManager, this);
 
         // Register Vault Economy
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
@@ -399,5 +403,9 @@ public class FishingEconomy extends JavaPlugin {
 
     public me.antigravity.fishingeconomy.fishing.OceanWeatherAndTides getOceanWeatherAndTides() {
         return oceanWeatherAndTides;
+    }
+
+    public me.antigravity.fishingeconomy.updater.UpdateManager getUpdateManager() {
+        return updateManager;
     }
 }

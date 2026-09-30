@@ -21,7 +21,7 @@ public class EconomyManager {
         loadData();
     }
 
-    private void loadData() {
+    public void loadData() {
         dataFile = new File(plugin.getDataFolder(), "data.yml");
         if (!dataFile.exists()) {
             try {

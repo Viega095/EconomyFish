@@ -58,6 +58,28 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("update") || args[0].equalsIgnoreCase("autoupdate")) {
+            if (!player.hasPermission("fishingeconomy.admin")) {
+                player.sendMessage(ChatColor.RED + "No tienes permisos de administrador.");
+                return true;
+            }
+            if (args.length >= 2 && (args[1].equalsIgnoreCase("apply") || args[1].equalsIgnoreCase("download"))) {
+                plugin.getUpdateManager().applyAutoUpdate(player);
+            } else {
+                plugin.getUpdateManager().checkUpdate(player, true);
+            }
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("reload")) {
+            if (!player.hasPermission("fishingeconomy.admin")) {
+                player.sendMessage(ChatColor.RED + "No tienes permisos de administrador.");
+                return true;
+            }
+            plugin.getUpdateManager().performLiveReload(player);
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("tides") || args[0].equalsIgnoreCase("tide") || args[0].equalsIgnoreCase("weather")) {
             plugin.getOceanWeatherAndTides().showTideStatus(player);
             return true;
@@ -190,6 +212,8 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
         sendClickable(player, "§d• Invocar Megalodón Ancestral", "/fish boss megalodon", "§eInvocar Jefe Mundial Megalodón");
         sendClickable(player, "§d• Iniciar Torneo de Pesca", "/ftournament start", "§eIniciar torneo global inmediatamente");
         sendClickable(player, "§d• Iniciar Expedición Kraken", "/expedition start", "§eIniciar expedición a aguas profundas");
+        sendClickable(player, "§a• Auto-Update / Verificar GitHub", "/fish update", "§eVerificar y descargar actualizaciones de GitHub");
+        sendClickable(player, "§a• Recarga en Caliente (Hot-Reload)", "/fish reload", "§eRecargar configuración y módulos sin reiniciar");
         player.sendMessage(ChatColor.DARK_PURPLE + "══════════════════════════════════════════════════");
     }
 
@@ -208,8 +232,13 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
                 subs.add("admin");
                 subs.add("boss");
                 subs.add("salvage");
+                subs.add("update");
+                subs.add("reload");
             }
             return filter(subs, args[0]);
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("update") && sender.hasPermission("fishingeconomy.admin")) {
+            return filter(Arrays.asList("check", "apply", "download"), args[1]);
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("salvage") && sender.hasPermission("fishingeconomy.admin")) {
             return filter(Arrays.asList("WOODEN_CHEST", "ANCIENT_LOCKBOX", "ATLANTIS_VAULT"), args[1]);
