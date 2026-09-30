@@ -42,8 +42,10 @@ public class OceanicBossRaid implements Listener {
         ElderGuardian guardian = (ElderGuardian) loc.getWorld().spawnEntity(loc, EntityType.ELDER_GUARDIAN);
         guardian.setCustomName(name);
         guardian.setCustomNameVisible(true);
-        double maxHp = type.equalsIgnoreCase("kraken") ? 1500.0 : 2500.0;
-        guardian.setMaxHealth(maxHp);
+        double maxHp = type.equalsIgnoreCase("kraken") ? 1200.0 : 1800.0;
+        if (guardian.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH) != null) {
+            guardian.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHp);
+        }
         guardian.setHealth(maxHp);
         this.currentBoss = guardian;
 

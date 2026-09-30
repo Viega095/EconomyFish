@@ -31,7 +31,7 @@ public class FishingListener implements Listener {
         if (event.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
             // Check if player has an active reeling session
             if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
-                plugin.getReelingManager().handleClick(player);
+                plugin.getReelingManager().handleRightClick(player);
                 event.setCancelled(true);
                 return;
             }
@@ -79,7 +79,8 @@ public class FishingListener implements Listener {
             }
         } else if (event.getState() == PlayerFishEvent.State.REEL_IN || event.getState() == PlayerFishEvent.State.IN_GROUND) {
             if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
-                plugin.getReelingManager().handleClick(player);
+                plugin.getReelingManager().handleRightClick(player);
+                event.setCancelled(true);
             }
         }
     }
@@ -121,9 +122,13 @@ public class FishingListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
-                plugin.getReelingManager().handleClick(player);
+        if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
+            if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                plugin.getReelingManager().handleLeftClick(player);
+                event.setCancelled(true);
+            } else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                plugin.getReelingManager().handleRightClick(player);
+                event.setCancelled(true);
             }
         }
     }

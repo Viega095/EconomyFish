@@ -3,12 +3,8 @@ package me.antigravity.fishingeconomy.fishing;
 import me.antigravity.fishingeconomy.FishingEconomy;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.FishHook;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,12 +13,13 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ReelingManager {
 
     private final FishingEconomy plugin;
-    private final Map<UUID, ActiveReelSession> activeSessions = new HashMap<>();
+    private final Map<UUID, ActiveReelSession> activeSessions = new ConcurrentHashMap<>();
 
     public ReelingManager(FishingEconomy plugin) {
         this.plugin = plugin;
@@ -42,10 +39,17 @@ public class ReelingManager {
         session.start();
     }
 
-    public void handleClick(Player player) {
+    public void handleLeftClick(Player player) {
         ActiveReelSession session = activeSessions.get(player.getUniqueId());
         if (session != null) {
-            session.onReelInput();
+            session.nudgeLeft();
+        }
+    }
+
+    public void handleRightClick(Player player) {
+        ActiveReelSession session = activeSessions.get(player.getUniqueId());
+        if (session != null) {
+            session.nudgeRight();
         }
     }
 
@@ -60,11 +64,13 @@ public class ReelingManager {
         private final Player player;
         private final FishHook hook;
         private final FishManager.CustomFish fish;
-        private double progress = 35.0; // 0% to 100%
-        private double cursor = 0.5; // 0.0 to 1.0
-        private double targetMin = 0.4;
-        private double targetMax = 0.6;
-        private double targetVelocity = 0.02;
+
+        private double progress = 40.0; // 0% to 100%
+        private double hookPos = 0.50; // Player cursor (0.0 to 1.0)
+        private double fishPos = 0.50; // Fish target center (0.0 to 1.0)
+        private double zoneWidth = 0.28; // Width of green zone
+        private double fishVelocity = 0.012;
+
         private BukkitTask task;
         private int ticks = 0;
 
@@ -72,27 +78,30 @@ public class ReelingManager {
             this.player = player;
             this.hook = hook;
             this.fish = fish;
-            
-            // Adjust difficulty based on rarity
-            if (fish.rarity.equalsIgnoreCase("LEGENDARY") || fish.rarity.equalsIgnoreCase("MYTHIC")) {
-                this.targetMin = 0.42;
-                this.targetMax = 0.58;
-                this.targetVelocity = 0.035;
+
+            // Rarity difficulty scaling
+            if (fish.rarity.equalsIgnoreCase("MYTHIC") || fish.rarity.equalsIgnoreCase("LEGENDARY")) {
+                this.zoneWidth = 0.22;
+                this.fishVelocity = 0.020;
             } else if (fish.rarity.equalsIgnoreCase("EPIC") || fish.rarity.equalsIgnoreCase("RARE")) {
-                this.targetMin = 0.38;
-                this.targetMax = 0.62;
-                this.targetVelocity = 0.025;
+                this.zoneWidth = 0.26;
+                this.fishVelocity = 0.016;
             } else {
-                this.targetMin = 0.35;
-                this.targetMax = 0.65;
-                this.targetVelocity = 0.015;
+                this.zoneWidth = 0.32;
+                this.fishVelocity = 0.012;
             }
         }
 
         public void start() {
-            player.sendMessage(ChatColor.GOLD + "🎣 ¡Un pez " + fish.rarity + " ha picado! " +
-                    ChatColor.YELLOW + "¡Haz clic derecho cuando el cursor esté en la zona verde!");
+            String rawRarity = plugin.getConfigManager().getFishConfig().getString("rarities." + fish.rarity + ".display", fish.rarity);
+            player.sendTitle("§b🎣 ¡Pez Picando!", "§e[Clic Izq ◀ Izquierda] §a[Zona Verde] §e[Derecha ▶ Clic Der]", 5, 45, 10);
             player.playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_SPLASH, 1f, 1.2f);
+            player.sendMessage("§6=================================================");
+            player.sendMessage("§b🎣 ¡Un pez " + rawRarity + " §bha mordido el anzuelo!");
+            player.sendMessage("§e▶ Usa §fClic Izquierdo (Golpear) §epara mover la aguja a la §fIZQUIERDA");
+            player.sendMessage("§e▶ Usa §fClic Derecho (Carrete) §epara mover la aguja a la §fDERECHA");
+            player.sendMessage("§a✔ ¡Mantén la aguja §f▲ §adentro de la zona verde §a█ §apara capturarlo!");
+            player.sendMessage("§6=================================================");
 
             this.task = new BukkitRunnable() {
                 @Override
@@ -103,22 +112,33 @@ public class ReelingManager {
                     }
 
                     ticks++;
-                    updatePhysics();
+                    updateFishPhysics();
                     renderActionBar();
 
-                    // Natural decay if not reeling in green zone
-                    boolean inGreen = cursor >= targetMin && cursor <= targetMax;
-                    if (inGreen) {
-                        progress += 0.35;
+                    // Check if player hook cursor is inside fish green zone
+                    double min = fishPos - (zoneWidth / 2.0);
+                    double max = fishPos + (zoneWidth / 2.0);
+                    boolean inZone = (hookPos >= min && hookPos <= max);
+
+                    if (inZone) {
+                        progress += 0.75;
+                        if (ticks % 4 == 0) {
+                            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.5f, 1.9f);
+                            Location hLoc = hook.getLocation();
+                            hLoc.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, hLoc.add(0, 0.5, 0), 2, 0.2, 0.1, 0.2, 0.02);
+                        }
                     } else {
-                        progress -= 0.45;
+                        progress -= 0.30;
+                        if (ticks % 8 == 0) {
+                            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.4f, 0.6f);
+                        }
                     }
 
-                    // Water particles at hook location
+                    // Water particles at hook
                     if (ticks % 3 == 0) {
-                        Location hookLoc = hook.getLocation();
-                        hookLoc.getWorld().spawnParticle(Particle.WATER_SPLASH, hookLoc, 10, 0.2, 0.1, 0.2, 0.1);
-                        hookLoc.getWorld().spawnParticle(Particle.BUBBLE_POP, hookLoc, 5, 0.3, 0.2, 0.3, 0.05);
+                        Location hLoc = hook.getLocation();
+                        hLoc.getWorld().spawnParticle(Particle.WATER_SPLASH, hLoc, 8, 0.2, 0.1, 0.2, 0.05);
+                        hLoc.getWorld().spawnParticle(Particle.BUBBLE_POP, hLoc, 3, 0.2, 0.1, 0.2, 0.02);
                     }
 
                     if (progress >= 100.0) {
@@ -132,42 +152,47 @@ public class ReelingManager {
             }.runTaskTimer(plugin, 0L, 1L);
         }
 
-        private void updatePhysics() {
-            // Target moves randomly back and forth
-            cursor += targetVelocity;
-            if (cursor >= 0.95 || cursor <= 0.05) {
-                targetVelocity = -targetVelocity;
+        private void updateFishPhysics() {
+            // Fish target wanders smoothly
+            fishPos += fishVelocity;
+            if (fishPos >= 0.88 || fishPos <= 0.12) {
+                fishVelocity = -fishVelocity;
             }
-            if (ThreadLocalRandom.current().nextDouble() < 0.08) {
-                targetVelocity = (ThreadLocalRandom.current().nextDouble() - 0.5) * 0.06;
+            if (ThreadLocalRandom.current().nextDouble() < 0.06) {
+                fishVelocity = (ThreadLocalRandom.current().nextDouble() - 0.5) * 0.035;
             }
-            cursor = Math.max(0.0, Math.min(1.0, cursor));
+            fishPos = Math.max(0.12, Math.min(0.88, fishPos));
         }
 
-        public void onReelInput() {
-            boolean inGreen = cursor >= targetMin && cursor <= targetMax;
-            if (inGreen) {
-                progress += 5.5;
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.6f, 1.8f);
-                player.spawnParticle(Particle.VILLAGER_HAPPY, player.getLocation().add(0, 1, 0), 3, 0.2, 0.2, 0.2);
-            } else {
-                progress -= 4.0;
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.8f, 0.6f);
-                player.sendMessage(ChatColor.RED + "⚠ ¡El sedal sufre demasiada tensión!");
-            }
+        public void nudgeLeft() {
+            hookPos = Math.max(0.0, hookPos - 0.08);
+            player.playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_RETRIEVE, 0.6f, 1.4f);
+            Location loc = player.getLocation();
+            loc.getWorld().spawnParticle(Particle.WATER_WAKE, loc.add(0, 1, 0), 2, 0.2, 0.1, 0.2, 0.05);
+        }
+
+        public void nudgeRight() {
+            hookPos = Math.min(1.0, hookPos + 0.08);
+            player.playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_RETRIEVE, 0.6f, 1.6f);
+            Location loc = player.getLocation();
+            loc.getWorld().spawnParticle(Particle.WATER_WAKE, loc.add(0, 1, 0), 2, 0.2, 0.1, 0.2, 0.05);
         }
 
         private void renderActionBar() {
-            int totalBars = 24;
-            int cursorIndex = (int) (cursor * totalBars);
-            int minIndex = (int) (targetMin * totalBars);
-            int maxIndex = (int) (targetMax * totalBars);
+            int totalBars = 26;
+            int hookIndex = (int) (hookPos * totalBars);
+            double min = fishPos - (zoneWidth / 2.0);
+            double max = fishPos + (zoneWidth / 2.0);
+            int minIndex = (int) (min * totalBars);
+            int maxIndex = (int) (max * totalBars);
+
+            boolean inZone = (hookPos >= min && hookPos <= max);
 
             StringBuilder sb = new StringBuilder();
             sb.append(ChatColor.DARK_GRAY).append("[");
             for (int i = 0; i <= totalBars; i++) {
-                if (i == cursorIndex) {
-                    sb.append(ChatColor.WHITE).append("▲");
+                if (i == hookIndex) {
+                    sb.append(ChatColor.WHITE).append("§l▲");
                 } else if (i >= minIndex && i <= maxIndex) {
                     sb.append(ChatColor.GREEN).append("█");
                 } else {
@@ -176,11 +201,22 @@ public class ReelingManager {
             }
             sb.append(ChatColor.DARK_GRAY).append("] ");
 
-            // Progress bar
+            // Progress percentage & status
             int progPercent = (int) Math.max(0, Math.min(100, progress));
-            ChatColor progColor = progPercent > 66 ? ChatColor.GREEN : (progPercent > 33 ? ChatColor.YELLOW : ChatColor.RED);
+            ChatColor progColor = progPercent > 60 ? ChatColor.GREEN : (progPercent > 30 ? ChatColor.YELLOW : ChatColor.RED);
             sb.append(progColor).append(progPercent).append("% ");
-            sb.append(ChatColor.GRAY).append("(").append(fish.name).append(ChatColor.GRAY).append(")");
+
+            if (inZone) {
+                sb.append(ChatColor.GREEN).append("✔ [ENGANCHADO] ");
+            } else {
+                if (hookPos < min) {
+                    sb.append(ChatColor.YELLOW).append("▶ Clic Der ▶ ");
+                } else {
+                    sb.append(ChatColor.YELLOW).append("◀ Clic Izq ◀ ");
+                }
+            }
+
+            sb.append(ChatColor.GRAY).append("(").append(ChatColor.translateAlternateColorCodes('&', fish.name)).append(ChatColor.GRAY).append(")");
 
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(sb.toString()));
         }
@@ -196,15 +232,20 @@ public class ReelingManager {
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.8f, 1.2f);
             player.spawnParticle(Particle.TOTEM, player.getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
 
+            String rawRarity = plugin.getConfigManager().getFishConfig().getString("rarities." + fish.rarity + ".display", fish.rarity);
             String msg = plugin.getConfigManager().getMessage("fishing.caught")
-                    .replace("%rarity%", plugin.getConfigManager().getFishConfig().getString("rarities." + fish.rarity + ".display", fish.rarity))
+                    .replace("%rarity%", rawRarity)
                     .replace("%fish%", fish.name)
                     .replace("%value%", plugin.getEconomyManager().format(fish.price));
-            player.sendMessage(msg);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+
+            if (plugin.getFishCodexManager() != null) {
+                plugin.getFishCodexManager().recordCatch(player, fish.id);
+            }
         }
 
         private void onFishEscape() {
-            player.sendMessage(ChatColor.RED + "💨 ¡El pez se ha soltado y escapó a las profundidades!");
+            player.sendMessage(ChatColor.RED + "💨 ¡El pez se ha zafado del anzuelo y escapó a las profundidades!");
             player.playSound(player.getLocation(), Sound.ENTITY_FISH_SWIM, 1f, 0.8f);
             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.7f, 1.2f);
         }

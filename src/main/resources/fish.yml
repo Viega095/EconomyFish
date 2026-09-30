@@ -1,82 +1,236 @@
 rarities:
   COMMON:
-    display: "&fCommon"
-    chance: 50.0
+    display: "&fComún"
+    chance: 40.0
+  UNCOMMON:
+    display: "&aPoco Común"
+    chance: 28.0
   RARE:
-    display: "&9Rare"
-    chance: 25.0
+    display: "&9Raro"
+    chance: 18.0
   EPIC:
-    display: "&5Epic"
-    chance: 15.0
+    display: "&5Épico"
+    chance: 9.0
   LEGENDARY:
-    display: "&6Legendary"
-    chance: 8.0
+    display: "&6Legendario"
+    chance: 4.0
   MYTHIC:
-    display: "&dMythic"
-    chance: 2.0
+    display: "&dMítico"
+    chance: 1.0
 
 fish:
-  COMMON_COD:
+  # ================= COMUNES =================
+  BACALAO_COSTERO:
     rarity: COMMON
     material: COD
-    name: "&fFresh Cod"
+    name: "&fBacalao Costero Fresco"
     lore:
-      - "&7A simple fresh cod."
-      - "&7Value: &a%price%"
-    price: 15.0
-    chance: 50.0
-  COMMON_SALMON:
+      - "&7Un pez común pescado cerca de las costas arenosas."
+      - "&7Fácil de capturar y muy fresco."
+    price: 18.0
+    chance: 35.0
+
+  SALMON_DE_RIO:
     rarity: COMMON
     material: SALMON
-    name: "&fRiver Salmon"
+    name: "&fSalmón de Río Cristalino"
     lore:
-      - "&7A standard fresh river salmon."
-      - "&7Value: &a%price%"
+      - "&7Habita en arroyos de montaña y ríos templados."
+      - "&7Excelente para preparar filetes sabrosos."
     price: 25.0
-    chance: 50.0
-  RARE_SALMON:
+    chance: 30.0
+
+  SARDINA_PLATEADA:
+    rarity: COMMON
+    material: COD
+    name: "&fSardina Plateada"
+    lore:
+      - "&7Pez pequeño que se desplaza en cardúmenes rápidos."
+    price: 15.0
+    chance: 35.0
+
+  CARPA_COMUN:
+    rarity: COMMON
+    material: COD
+    name: "&fCarpa de Estanque"
+    lore:
+      - "&7Pez de agua dulce resistente y muy común."
+    price: 20.0
+    chance: 25.0
+
+  # ================= POCO COMUNES =================
+  LUBINA_CORALINA:
+    rarity: UNCOMMON
+    material: TROPICAL_FISH
+    name: "&aLubina de Arrecife Tropical"
+    lore:
+      - "&7Pescada entre formaciones de coral multicolor."
+      - "&7Su carne tierna es muy codiciada."
+    price: 65.0
+    chance: 30.0
+
+  BAGRE_DE_CUEVA:
+    rarity: UNCOMMON
+    material: COD
+    name: "&aBagre Subterráneo Ciego"
+    lore:
+      - "&7Adaptado a la oscuridad de ríos subterráneos y cavernas."
+    price: 75.0
+    chance: 25.0
+
+  ROBALO_DORADO:
+    rarity: UNCOMMON
+    material: SALMON
+    name: "&aRóbalo Rayado Dorado"
+    lore:
+      - "&7Un nadador vigoroso que ofrece buena resistencia."
+    price: 85.0
+    chance: 25.0
+
+  CALAMAR_COSTEÑO:
+    rarity: UNCOMMON
+    material: INK_SAC
+    name: "&aCalamar Moteado Menor"
+    lore:
+      - "&7Expulsa nubes de tinta al ser jalado del agua."
+    price: 70.0
+    chance: 20.0
+
+  # ================= RAROS =================
+  SALMON_REY_GIGANTE:
     rarity: RARE
     material: SALMON
-    name: "&9Giant King Salmon"
+    name: "&9Salmón Rey de las Corrientes"
     lore:
-      - "&7A surprisingly massive salmon from deep currents."
-      - "&7Value: &a%price%"
-    price: 80.0
-    chance: 30.0
-  RARE_TUNA:
+      - "&7Un ejemplar enorme que nada contra corrientes salvajes."
+      - "&7Su tamaño duplica el de un salmón estándar."
+    price: 180.0
+    chance: 25.0
+
+  ATUN_ALETA_AZUL:
     rarity: RARE
     material: COOKED_SALMON
-    name: "&9Bluefin Deep Tuna"
+    name: "&9Atún de Aleta Azul Gigante"
     lore:
-      - "&7Prized by gourmet chefs across the realm."
-      - "&7Value: &a%price%"
-    price: 150.0
+      - "&7El emperador de la velocidad marina de mar abierto."
+      - "&7Muy valorado en mercados gastronómicos de alta gama."
+    price: 250.0
     chance: 20.0
-  EPIC_PUFFER:
+
+  ANGUILA_ELECTRICA:
+    rarity: RARE
+    material: PRISMARINE_SHARD
+    name: "&9Anguila Voltaica Marina"
+    lore:
+      - "&7Desprende pequeñas chispas eléctricas al tocarla."
+    price: 220.0
+    chance: 20.0
+
+  PEZ_ESPADA_PLATEADO:
+    rarity: RARE
+    material: SALMON
+    name: "&9Pez Espada Reluciente"
+    lore:
+      - "&7Su puntiagudo hocico corta el agua con precisión mortal."
+    price: 280.0
+    chance: 15.0
+
+  # ================= ÉPICOS =================
+  PEZ_LINTERNA_ABISAL:
+    rarity: EPIC
+    material: GLOW_INK_SAC
+    name: "&5Pez Linterna de las Fosas Abisales"
+    lore:
+      - "&7Emite un brillo fantasmal en la oscuridad absoluta."
+      - "&7Pescado a cientos de metros de profundidad marina."
+    price: 650.0
+    chance: 20.0
+
+  PEZ_GLOBO_TOXICO:
     rarity: EPIC
     material: PUFFERFISH
-    name: "&5Golden Toxic Puffer"
+    name: "&5Pez Globo Dorado Venenoso"
     lore:
-      - "&7It glows with a strange bio-luminescent light."
-      - "&7Value: &a%price%"
-    price: 450.0
+      - "&7Se infla amenazadoramente liberando toxinas místicas."
+      - "&7Usado por alquimistas para brebajes raros."
+    price: 750.0
+    chance: 20.0
+
+  RAYA_FANTASMAL:
+    rarity: EPIC
+    material: PHANTOM_MEMBRANE
+    name: "&5Raya Fantasma del Fondo Marino"
+    lore:
+      - "&7Se desliza como un espectro entre las olas nocturnas."
+    price: 850.0
     chance: 15.0
-  LEGENDARY_NEMO:
+
+  TIBURON_MARTILLO_MENOR:
+    rarity: EPIC
+    material: PRISMARINE_CRYSTALS
+    name: "&5Tiburón Martillo Menor"
+    lore:
+      - "&7Cazador nato de visión periférica perfecta."
+    price: 950.0
+    chance: 15.0
+
+  # ================= LEGENDARIOS =================
+  PEZ_PAYASO_CORONA:
     rarity: LEGENDARY
     material: TROPICAL_FISH
-    name: "&6Lost Crown Clownfish"
+    name: "&6Emperador del Gran Arrecife Coralino"
     lore:
-      - "&7You found the emperor of coral reefs!"
-      - "&7Value: &a%price%"
-    price: 1500.0
-    chance: 5.0
-  MYTHIC_MEGALODON:
+      - "&7¡El rey indiscutible de todos los peces tropicales!"
+      - "&7Sus escamas brillan como gemas preciosas."
+    price: 2500.0
+    chance: 25.0
+
+  TIBURON_BLANCO_ANCESTRAL:
+    rarity: LEGENDARY
+    material: PRISMARINE_SHARD
+    name: "&6Gran Tiburón Blanco Abisal"
+    lore:
+      - "&7Un depredador formidable con mandíbulas de acero."
+      - "&7Requiere gran destreza para no romper el sedal."
+    price: 3200.0
+    chance: 25.0
+
+  ANGUILA_DRAGON_OBSIDIANA:
+    rarity: LEGENDARY
+    material: ECHO_SHARD
+    name: "&6Anguila Dragón de Obsidiana"
+    lore:
+      - "&7Se cuenta que nada en ríos de lava bajo la corteza oceánica."
+    price: 3800.0
+    chance: 20.0
+
+  # ================= MÍTICOS =================
+  MEGALODON_SCALE:
     rarity: MYTHIC
     material: NAUTILUS_SHELL
-    name: "&d&l✦ Ancient Megalodon Scale ✦"
+    name: "&d&l✦ Escama de Megalodón Ancestral ✦"
     lore:
-      - "&7Harvested from the apex predator of the forgotten abyss."
-      - "&eAncient Relic: Worth a king's ransom."
-      - "&7Value: &a%price%"
-    price: 10000.0
-    chance: 2.0
+      - "&7Perteneciente al rey supremo del océano prehistórico."
+      - "&eReliquia Abisal Única: Vale una auténtica fortuna."
+    price: 15000.0
+    chance: 35.0
+
+  CORAZON_DEL_LEVIATAN:
+    rarity: MYTHIC
+    material: HEART_OF_THE_SEA
+    name: "&d&l✦ Corazón Latente del Kraken ✦"
+    lore:
+      - "&7Palpita con la energía pura de las profundidades marinas."
+      - "&eReliquia Abisal Única: Tesoro de leyenda."
+    price: 20000.0
+    chance: 35.0
+
+  PERLA_ESTELAR_POSEIDON:
+    rarity: MYTHIC
+    material: NETHER_STAR
+    name: "&d&l✦ Esencia Primordial de Poseidón ✦"
+    lore:
+      - "&7Condensación marina bendecida por los antiguos dioses del mar."
+      - "&eReliquia Abisal Única: Codiciada por todo el reino."
+    price: 25000.0
+    chance: 30.0
