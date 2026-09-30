@@ -82,6 +82,9 @@ public class FishingEconomy extends JavaPlugin {
     private me.antigravity.fishingeconomy.fishing.FishCodexManager fishCodexManager;
     private me.antigravity.fishingeconomy.fishing.OceanicBossRaid oceanicBossRaid;
     private me.antigravity.fishingeconomy.fishing.AquacultureRigManager aquacultureRigManager;
+    private me.antigravity.fishingeconomy.fishing.BaitCraftingStation baitCraftingStation;
+    private me.antigravity.fishingeconomy.fishing.DeepSeaTreasureSalvage deepSeaTreasureSalvage;
+    private me.antigravity.fishingeconomy.fishing.OceanWeatherAndTides oceanWeatherAndTides;
 
     @Override
     public void onEnable() {
@@ -97,6 +100,9 @@ public class FishingEconomy extends JavaPlugin {
         this.fishCodexManager = new me.antigravity.fishingeconomy.fishing.FishCodexManager(this);
         this.oceanicBossRaid = new me.antigravity.fishingeconomy.fishing.OceanicBossRaid(this);
         this.aquacultureRigManager = new me.antigravity.fishingeconomy.fishing.AquacultureRigManager(this);
+        this.baitCraftingStation = new me.antigravity.fishingeconomy.fishing.BaitCraftingStation(this);
+        this.deepSeaTreasureSalvage = new me.antigravity.fishingeconomy.fishing.DeepSeaTreasureSalvage(this);
+        this.oceanWeatherAndTides = new me.antigravity.fishingeconomy.fishing.OceanWeatherAndTides(this);
         this.reelingManager = new me.antigravity.fishingeconomy.fishing.ReelingManager(this);
         this.baitManager = new me.antigravity.fishingeconomy.fishing.BaitManager(this);
         this.aquariumManager = new me.antigravity.fishingeconomy.fishing.AquariumManager(this);
@@ -209,6 +215,8 @@ public class FishingEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(fishCodexManager, this);
         getServer().getPluginManager().registerEvents(oceanicBossRaid, this);
         getServer().getPluginManager().registerEvents(aquacultureRigManager, this);
+        getServer().getPluginManager().registerEvents(baitCraftingStation, this);
+        getServer().getPluginManager().registerEvents(deepSeaTreasureSalvage, this);
 
         // Register Vault Economy
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
@@ -379,5 +387,17 @@ public class FishingEconomy extends JavaPlugin {
 
     public me.antigravity.fishingeconomy.fishing.AquacultureRigManager getAquacultureRigManager() {
         return aquacultureRigManager;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.BaitCraftingStation getBaitCraftingStation() {
+        return baitCraftingStation;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.DeepSeaTreasureSalvage getDeepSeaTreasureSalvage() {
+        return deepSeaTreasureSalvage;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.OceanWeatherAndTides getOceanWeatherAndTides() {
+        return oceanWeatherAndTides;
     }
 }

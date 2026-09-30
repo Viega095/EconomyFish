@@ -2,6 +2,7 @@ package me.antigravity.fishingeconomy.commands;
 
 import me.antigravity.fishingeconomy.FishingEconomy;
 import me.antigravity.fishingeconomy.fishing.RodCraftingManager;
+import me.antigravity.fishingeconomy.fishing.DeepSeaTreasureSalvage;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -49,6 +50,32 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("codex") || args[0].equalsIgnoreCase("encyclopedia")) {
             plugin.getFishCodexManager().openCodexGUI(player);
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("bait") || args[0].equalsIgnoreCase("cauldron")) {
+            plugin.getBaitCraftingStation().openGUI(player);
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("tides") || args[0].equalsIgnoreCase("tide") || args[0].equalsIgnoreCase("weather")) {
+            plugin.getOceanWeatherAndTides().showTideStatus(player);
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("salvage")) {
+            if (!player.hasPermission("fishingeconomy.admin")) {
+                player.sendMessage(ChatColor.YELLOW + "Pesca en aguas profundas o usa cebo rastreador para rescatar cajas de tesoros del fondo marino.");
+                return true;
+            }
+            String tierStr = args.length >= 2 ? args[1].toUpperCase() : "WOODEN_CHEST";
+            try {
+                DeepSeaTreasureSalvage.SalvageTier tier = DeepSeaTreasureSalvage.SalvageTier.valueOf(tierStr);
+                player.getInventory().addItem(plugin.getDeepSeaTreasureSalvage().createSalvageItem(tier));
+                player.sendMessage(ChatColor.GREEN + "✓ Has recibido un " + tier.getDisplayName());
+            } catch (Exception e) {
+                player.sendMessage(ChatColor.RED + "Tier inválido: WOODEN_CHEST, ANCIENT_LOCKBOX, ATLANTIS_VAULT");
+            }
             return true;
         }
 
@@ -133,6 +160,8 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
         player.sendMessage(ChatColor.AQUA + "╚════════════════════════════════════════════════╝");
         player.sendMessage(ChatColor.GRAY + "Haz clic en cualquier botón interactivo para probarlo:");
 
+        sendClickable(player, "§6▶ §eCaldero Alquímico de Cebos §7(/fish bait)", "/fish bait", "§aElaborar cebos biológicos y míticos");
+        sendClickable(player, "§6▶ §eEstado de Mareas Oceánicas §7(/fish tides)", "/fish tides", "§aVer el clima marino y multiplicadores");
         sendClickable(player, "§6▶ §eEnciclopedia Codex de Peces §7(/fish codex)", "/fish codex", "§aVer todas las especies descubiertas");
         sendClickable(player, "§6▶ §ePlataforma de Acuicultura Offshore §7(/fish rig)", "/fish rig", "§aGestionar plataforma de pesca pasiva");
         sendClickable(player, "§6▶ §eAstilleros de Cañas Míticas §7(/customrod)", "/customrod", "§aVer y forjar cañas con bonos especiales");
@@ -174,12 +203,16 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("guide", "help", "rod", "codex", "rig"));
+            List<String> subs = new ArrayList<>(Arrays.asList("guide", "help", "rod", "codex", "rig", "bait", "tides"));
             if (sender.hasPermission("fishingeconomy.admin")) {
                 subs.add("admin");
                 subs.add("boss");
+                subs.add("salvage");
             }
             return filter(subs, args[0]);
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("salvage") && sender.hasPermission("fishingeconomy.admin")) {
+            return filter(Arrays.asList("WOODEN_CHEST", "ANCIENT_LOCKBOX", "ATLANTIS_VAULT"), args[1]);
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("rig")) {
             return filter(Arrays.asList("gui", "deploy", "collect"), args[1]);

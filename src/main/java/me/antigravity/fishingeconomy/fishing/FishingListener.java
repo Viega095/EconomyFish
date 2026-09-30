@@ -104,6 +104,18 @@ public class FishingListener implements Listener {
         if (plugin.getFishCodexManager() != null) {
             plugin.getFishCodexManager().recordCatch(player, fish.id);
         }
+
+        // Deep Sea Treasure Salvage chance
+        if (plugin.getDeepSeaTreasureSalvage() != null && ThreadLocalRandom.current().nextDouble() < 0.08) {
+            DeepSeaTreasureSalvage.SalvageTier[] tiers = DeepSeaTreasureSalvage.SalvageTier.values();
+            DeepSeaTreasureSalvage.SalvageTier rolledTier = tiers[ThreadLocalRandom.current().nextInt(tiers.length)];
+            ItemStack crate = plugin.getDeepSeaTreasureSalvage().createSalvageItem(rolledTier);
+            if (!player.getInventory().addItem(crate).isEmpty()) {
+                player.getWorld().dropItemNaturally(player.getLocation(), crate);
+            }
+            player.sendMessage(ChatColor.GOLD + "⚓ [Rescate Marino] ¡Has desenterrado un " + rolledTier.getDisplayName() + ChatColor.GOLD + "!");
+            player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1.2f);
+        }
     }
 
     @EventHandler
