@@ -5,14 +5,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -29,14 +29,14 @@ public class FishingListener implements Listener {
     public void onFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
-            // Check if player has an active reeling session
-            if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
-                plugin.getReelingManager().handleRightClick(player);
-                event.setCancelled(true);
-                return;
-            }
+        // If player already in reeling session, intercept all fishing events as right-click reel inputs
+        if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
+            event.setCancelled(true);
+            plugin.getReelingManager().handleRightClick(player);
+            return;
+        }
 
+        if (event.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
             // Consume bait if available
             BaitManager.BaitType bait = null;
             if (plugin.getBaitManager() != null) {
@@ -75,7 +75,7 @@ public class FishingListener implements Listener {
                     return;
                 }
 
-                // Normal catch process
+                // Normal catch process for basic fish
                 giveFishToPlayer(player, fish, rod);
 
                 // Custom Rod Bonuses
@@ -90,11 +90,6 @@ public class FishingListener implements Listener {
                         }
                     }
                 }
-            }
-        } else if (event.getState() == PlayerFishEvent.State.REEL_IN || event.getState() == PlayerFishEvent.State.IN_GROUND) {
-            if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
-                plugin.getReelingManager().handleRightClick(player);
-                event.setCancelled(true);
             }
         }
     }
@@ -120,7 +115,6 @@ public class FishingListener implements Listener {
                 .replace("%fish%", fish.name)
                 .replace("%value%", plugin.getEconomyManager().format(finalPrice));
         
-        // Ensure final message with all placeholders is completely colorized
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
         if (hasNeptuneBlessing) {
             player.sendMessage(ChatColor.GOLD + "🔱 [Bendición de Neptuno] ¡+30% de valor otorgado a esta captura!");
@@ -129,6 +123,12 @@ public class FishingListener implements Listener {
 
         if (plugin.getFishCodexManager() != null) {
             plugin.getFishCodexManager().recordCatch(player, fish.id);
+        }
+
+        // Fisherman Job XP
+        if (plugin.getJobsManager() != null && plugin.getJobsManager().getJob(player) == me.antigravity.fishingeconomy.jobs.JobsManager.JobType.FISHERMAN) {
+            plugin.getJobsManager().addXp(player, 15);
+            plugin.getEconomyManager().depositPlayer(player, 1.0);
         }
 
         // Deep Sea Treasure Salvage chance (boosted with Sonar)
@@ -145,17 +145,55 @@ public class FishingListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
-            if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            // Filter only main hand to avoid double processing off-hand
+            if (event.getHand() == null || event.getHand() == EquipmentSlot.HAND) {
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    event.setCancelled(true);
+                    plugin.getReelingManager().handleRightClick(player);
+                } else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                    event.setCancelled(true);
+                    plugin.getReelingManager().handleLeftClick(player);
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onArmSwing(PlayerAnimationEvent event) {
+        Player player = event.getPlayer();
+        if (event.getAnimationType() == PlayerAnimationType.ARM_SWING) {
+            if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
                 plugin.getReelingManager().handleLeftClick(player);
-                event.setCancelled(true);
-            } else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                plugin.getReelingManager().handleRightClick(player);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
+            ItemStack dropped = event.getItemDrop().getItemStack();
+            if (dropped.getType() == Material.FISHING_ROD) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        if (plugin.getReelingManager() != null) {
+            plugin.getReelingManager().cancelSession(event.getPlayer().getUniqueId());
+        }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        if (plugin.getReelingManager() != null) {
+            plugin.getReelingManager().cancelSession(event.getEntity().getUniqueId());
         }
     }
 }
