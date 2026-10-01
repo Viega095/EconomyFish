@@ -109,6 +109,10 @@ public class FishingEconomy extends JavaPlugin {
         this.oceanWeatherAndTides = new me.antigravity.fishingeconomy.fishing.OceanWeatherAndTides(this);
         this.divingSuitManager = new me.antigravity.fishingeconomy.gear.DivingSuitManager(this);
         this.rodEnchantManager = new me.antigravity.fishingeconomy.fishing.RodEnchantManager(this);
+        this.globalTournamentEngine = new me.antigravity.fishingeconomy.fishing.GlobalFishingTournamentEngine(this);
+        this.shipwreckManager = new me.antigravity.fishingeconomy.fishing.ShipwreckExpeditionManager(this);
+        this.fishMutationLab = new me.antigravity.fishingeconomy.fishing.FishMutationLab(this);
+        this.fishTaxidermyMuseum = new me.antigravity.fishingeconomy.fishing.FishTaxidermyMuseum(this);
         this.fishTestLabGUI = new me.antigravity.fishingeconomy.gui.FishTestLabGUI(this);
         this.updateManager = new me.antigravity.fishingeconomy.updater.UpdateManager(this);
         this.updateManager.startAsyncCheck();
@@ -228,6 +232,9 @@ public class FishingEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(deepSeaTreasureSalvage, this);
         getServer().getPluginManager().registerEvents(divingSuitManager, this);
         getServer().getPluginManager().registerEvents(rodEnchantManager, this);
+        getServer().getPluginManager().registerEvents(shipwreckManager, this);
+        getServer().getPluginManager().registerEvents(fishMutationLab, this);
+        getServer().getPluginManager().registerEvents(fishTaxidermyMuseum, this);
         getServer().getPluginManager().registerEvents(fishTestLabGUI, this);
         getServer().getPluginManager().registerEvents(updateManager, this);
 
@@ -424,6 +431,27 @@ public class FishingEconomy extends JavaPlugin {
 
     public me.antigravity.fishingeconomy.fishing.RodEnchantManager getRodEnchantManager() {
         return rodEnchantManager;
+    }
+
+    private me.antigravity.fishingeconomy.fishing.GlobalFishingTournamentEngine globalTournamentEngine;
+    private me.antigravity.fishingeconomy.fishing.ShipwreckExpeditionManager shipwreckManager;
+    private me.antigravity.fishingeconomy.fishing.FishMutationLab fishMutationLab;
+    private me.antigravity.fishingeconomy.fishing.FishTaxidermyMuseum fishTaxidermyMuseum;
+
+    public me.antigravity.fishingeconomy.fishing.GlobalFishingTournamentEngine getGlobalTournamentEngine() {
+        return globalTournamentEngine;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.ShipwreckExpeditionManager getShipwreckManager() {
+        return shipwreckManager;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.FishMutationLab getFishMutationLab() {
+        return fishMutationLab;
+    }
+
+    public me.antigravity.fishingeconomy.fishing.FishTaxidermyMuseum getFishTaxidermyMuseum() {
+        return fishTaxidermyMuseum;
     }
 
     public me.antigravity.fishingeconomy.gui.FishTestLabGUI getFishTestLabGUI() {

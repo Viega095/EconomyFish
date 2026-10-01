@@ -68,16 +68,20 @@ public class FishTestLabGUI implements Listener {
                 Arrays.asList("§7Spawnea al temible Kraken en", "§7tu posición con ataques de tentáculos.", "", "§5▶ Haz clic para invocar")));
 
         // Slot 14: Iniciar Torneo de Pesca Global
-        inv.setItem(14, createBtn(Material.GOLDEN_HELMET, "§6🏆 Iniciar Torneo de Pesca Global",
-                Arrays.asList("§7Comienza un evento de torneo de", "§7pesca para todo el servidor con premios.", "", "§6▶ Haz clic para iniciar")));
+        inv.setItem(14, createBtn(Material.GOLDEN_HELMET, "§6🏆 Iniciar Campeonato de Pesca Global",
+                Arrays.asList("§7Comienza un evento de torneo de", "§7pesca para todo el servidor con BossBar.", "", "§6▶ Haz clic para iniciar")));
 
-        // Slot 15: Iniciar Expedición Oceánica
-        inv.setItem(15, createBtn(Material.SPYGLASS, "§e🚢 Iniciar Expedición de Altamar",
-                Arrays.asList("§7Lanza la expedición hacia aguas", "§7profundas para cazar criaturas míticas.", "", "§e▶ Haz clic para iniciar")));
+        // Slot 15: Expedición a Naufragios & Ganzúa
+        inv.setItem(15, createBtn(Material.MAP, "§e🚢 Expediciones a Galeones Hundidos",
+                Arrays.asList("§7Abre el mapa interactivo para bucear", "§7y forzar cerraduras submarinas.", "", "§e▶ Haz clic para abrir")));
 
         // Slot 16: Dar Cañas Míticas
         inv.setItem(16, createBtn(Material.BLAZE_ROD, "§6🔱 Recibir Caña del Leviatán",
                 Arrays.asList("§7Otorga la Caña Perdición del Leviatán", "§7con bono de doble captura a tu inventario.", "", "§6▶ Haz clic para recibir")));
+
+        // Slot 17: Laboratorio de Mutación Genética
+        inv.setItem(17, createBtn(Material.DRAGON_BREATH, "§d🧬 Laboratorio de Mutación Genética",
+                Arrays.asList("§7Combina genes de 2 peces con catalizadores", "§7para crear especies híbridas de valor x5.", "", "§d▶ Haz clic para abrir")));
 
         // Slot 19: Altar de Encantamientos de Caña
         inv.setItem(19, createBtn(Material.ENCHANTING_TABLE, "§9✨ Altar de Encantamientos Arcanos",
@@ -134,6 +138,10 @@ public class FishTestLabGUI implements Listener {
         // Slot 34: Empresas Pesqueras
         inv.setItem(34, createBtn(Material.BEACON, "§d🏢 Corporaciones Pesqueras",
                 Arrays.asList("§7Crea tu empresa pesquera, contrata", "§7flotas y gestiona acciones corporativas.", "", "§d▶ Haz clic para abrir")));
+
+        // Slot 35: Museo de Taxidermia
+        inv.setItem(35, createBtn(Material.ARMOR_STAND, "§e🏛️ Museo de Taxidermia & Acuarios",
+                Arrays.asList("§7Coloca pedestales 3D de tus capturas", "§7y recauda ganancias de visitantes.", "", "§e▶ Haz clic para abrir")));
 
         // Slot 48: Auto-Update Check
         inv.setItem(48, createBtn(Material.EXPERIENCE_BOTTLE, "§a🔄 Probar Auto-Update en GitHub",
@@ -197,15 +205,16 @@ public class FishTestLabGUI implements Listener {
 
             case 14: // Torneo
                 player.closeInventory();
-                if (plugin.getTournamentManager() != null) {
-                    plugin.getTournamentManager().startTournament(me.antigravity.fishingeconomy.fishing.TournamentManager.TournamentType.HEAVIEST_FISH, 10);
-                    player.sendMessage(ChatColor.GOLD + "🏆 [Lab] ¡Torneo de pesca de 10 minutos iniciado!");
+                if (plugin.getGlobalTournamentEngine() != null) {
+                    plugin.getGlobalTournamentEngine().startTournament(me.antigravity.fishingeconomy.fishing.GlobalFishingTournamentEngine.DerbyType.WEIGHT_CHAMPIONSHIP, 10);
                 }
                 break;
 
-            case 15: // Expedición
+            case 15: // Expedición Naufragios
                 player.closeInventory();
-                player.performCommand("expedition start");
+                if (plugin.getShipwreckManager() != null) {
+                    plugin.getShipwreckManager().openExpeditionMapGUI(player);
+                }
                 break;
 
             case 16: // Dar Caña Leviatán
@@ -213,6 +222,13 @@ public class FishTestLabGUI implements Listener {
                     player.getInventory().addItem(plugin.getRodCraftingManager().createCustomRod(RodCraftingManager.CustomRodType.LEVIATHAN_BANE));
                     player.sendMessage(ChatColor.GREEN + "✔ Caña Perdición del Leviatán añadida a tu inventario.");
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1.2f);
+                }
+                break;
+
+            case 17: // Laboratorio Mutación
+                player.closeInventory();
+                if (plugin.getFishMutationLab() != null) {
+                    plugin.getFishMutationLab().openMutationGUI(player);
                 }
                 break;
 
@@ -294,6 +310,13 @@ public class FishTestLabGUI implements Listener {
             case 34: // Corporaciones
                 player.closeInventory();
                 player.performCommand("corp");
+                break;
+
+            case 35: // Museo Taxidermia
+                player.closeInventory();
+                if (plugin.getFishTaxidermyMuseum() != null) {
+                    plugin.getFishTaxidermyMuseum().openMuseumGUI(player);
+                }
                 break;
 
             case 48: // Update
