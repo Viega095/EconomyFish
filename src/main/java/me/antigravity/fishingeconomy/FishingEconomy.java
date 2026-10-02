@@ -149,6 +149,7 @@ public class FishingEconomy extends JavaPlugin {
         this.farmingGui = new FarmingGui(this);
         this.slotsGui = new SlotsGui(this);
         this.customRodGui = new me.antigravity.fishingeconomy.gui.CustomRodGui(this);
+        this.customRodStatsGui = new me.antigravity.fishingeconomy.gui.CustomRodStatsGui(this);
 
         // Register Commands & TabCompleters
         EconomyCommand ecoCmd = new EconomyCommand(this);
@@ -236,6 +237,7 @@ public class FishingEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(fishMutationLab, this);
         getServer().getPluginManager().registerEvents(fishTaxidermyMuseum, this);
         getServer().getPluginManager().registerEvents(fishTestLabGUI, this);
+        getServer().getPluginManager().registerEvents(customRodStatsGui, this);
         getServer().getPluginManager().registerEvents(updateManager, this);
 
         // Register Vault Economy
@@ -452,6 +454,12 @@ public class FishingEconomy extends JavaPlugin {
 
     public me.antigravity.fishingeconomy.fishing.FishTaxidermyMuseum getFishTaxidermyMuseum() {
         return fishTaxidermyMuseum;
+    }
+
+    private me.antigravity.fishingeconomy.gui.CustomRodStatsGui customRodStatsGui;
+
+    public me.antigravity.fishingeconomy.gui.CustomRodStatsGui getCustomRodStatsGui() {
+        return customRodStatsGui;
     }
 
     public me.antigravity.fishingeconomy.gui.FishTestLabGUI getFishTestLabGUI() {

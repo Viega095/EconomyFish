@@ -125,6 +125,11 @@ public class FishingListener implements Listener {
             plugin.getFishCodexManager().recordCatch(player, fish.id);
         }
 
+        // Update active rod stats & Marine EXP
+        if (plugin.getCustomRodStatsGui() != null) {
+            plugin.getCustomRodStatsGui().updateRodStats(rod, fish);
+        }
+
         // Fisherman Job XP
         if (plugin.getJobsManager() != null && plugin.getJobsManager().getJob(player) == me.antigravity.fishingeconomy.jobs.JobsManager.JobType.FISHERMAN) {
             plugin.getJobsManager().addXp(player, 15);
@@ -148,6 +153,21 @@ public class FishingListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+
+        // Check if player is holding a fishing rod and shift-right clicks (Sneaking)
+        if (event.getHand() == EquipmentSlot.HAND && player.isSneaking()) {
+            ItemStack inHand = player.getInventory().getItemInMainHand();
+            if (inHand.getType() == Material.FISHING_ROD && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+                if (plugin.getReelingManager() == null || !plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
+                    event.setCancelled(true);
+                    if (plugin.getCustomRodStatsGui() != null) {
+                        plugin.getCustomRodStatsGui().open(player);
+                    }
+                    return;
+                }
+            }
+        }
+
         if (plugin.getReelingManager() != null && plugin.getReelingManager().hasActiveSession(player.getUniqueId())) {
             // Filter only main hand to avoid double processing off-hand
             if (event.getHand() == null || event.getHand() == EquipmentSlot.HAND) {

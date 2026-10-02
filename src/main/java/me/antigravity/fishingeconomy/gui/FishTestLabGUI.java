@@ -139,6 +139,10 @@ public class FishTestLabGUI implements Listener {
         inv.setItem(34, createBtn(Material.BEACON, "§d🏢 Corporaciones Pesqueras",
                 Arrays.asList("§7Crea tu empresa pesquera, contrata", "§7flotas y gestiona acciones corporativas.", "", "§d▶ Haz clic para abrir")));
 
+        // Slot 26: Inspección de Caña y Cebos
+        inv.setItem(26, createBtn(Material.FISHING_ROD, "§6🎣 Inspección de Caña & Cebos (GUI)",
+                Arrays.asList("§7Abre el panel de estadísticas en vivo,", "§7nivel marino y equipador de cebos.", "", "§6▶ Haz clic para abrir")));
+
         // Slot 35: Museo de Taxidermia
         inv.setItem(35, createBtn(Material.ARMOR_STAND, "§e🏛️ Museo de Taxidermia & Acuarios",
                 Arrays.asList("§7Coloca pedestales 3D de tus capturas", "§7y recauda ganancias de visitantes.", "", "§e▶ Haz clic para abrir")));
@@ -273,6 +277,12 @@ public class FishTestLabGUI implements Listener {
                     player.getInventory().addItem(plugin.getDeepSeaTreasureSalvage().createSalvageItem(DeepSeaTreasureSalvage.SalvageTier.ATLANTIS_VAULT));
                     player.sendMessage(ChatColor.GOLD + "✔ Bóveda de Atlántida añadida a tu inventario.");
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1.2f);
+                }
+                break;
+
+            case 26: // Inspección de Caña y Cebos
+                if (plugin.getCustomRodStatsGui() != null) {
+                    plugin.getCustomRodStatsGui().open(player);
                 }
                 break;
 
