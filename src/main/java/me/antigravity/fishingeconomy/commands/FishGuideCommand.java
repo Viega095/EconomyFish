@@ -50,6 +50,13 @@ public class FishGuideCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("mastery") || args[0].equalsIgnoreCase("masteries") || args[0].equalsIgnoreCase("talents")) {
+            if (plugin.getFishingMasteryTreeGUI() != null) {
+                plugin.getFishingMasteryTreeGUI().open(player);
+            }
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("rod") || args[0].equalsIgnoreCase("rods")) {
             plugin.getCustomRodGui().open(player);
             return true;

@@ -89,6 +89,7 @@ public class FishingEconomy extends JavaPlugin {
     private me.antigravity.fishingeconomy.gear.DivingSuitManager divingSuitManager;
     private me.antigravity.fishingeconomy.fishing.RodEnchantManager rodEnchantManager;
     private me.antigravity.fishingeconomy.gui.FishTestLabGUI fishTestLabGUI;
+    private me.antigravity.fishingeconomy.gui.FishingMasteryTreeGUI fishingMasteryTreeGUI;
 
     @Override
     public void onEnable() {
@@ -150,6 +151,7 @@ public class FishingEconomy extends JavaPlugin {
         this.slotsGui = new SlotsGui(this);
         this.customRodGui = new me.antigravity.fishingeconomy.gui.CustomRodGui(this);
         this.customRodStatsGui = new me.antigravity.fishingeconomy.gui.CustomRodStatsGui(this);
+        this.fishingMasteryTreeGUI = new me.antigravity.fishingeconomy.gui.FishingMasteryTreeGUI(this);
 
         // Register Commands & TabCompleters
         EconomyCommand ecoCmd = new EconomyCommand(this);
@@ -238,6 +240,7 @@ public class FishingEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(fishTaxidermyMuseum, this);
         getServer().getPluginManager().registerEvents(fishTestLabGUI, this);
         getServer().getPluginManager().registerEvents(customRodStatsGui, this);
+        getServer().getPluginManager().registerEvents(fishingMasteryTreeGUI, this);
         getServer().getPluginManager().registerEvents(updateManager, this);
 
         // Register Vault Economy
@@ -464,5 +467,9 @@ public class FishingEconomy extends JavaPlugin {
 
     public me.antigravity.fishingeconomy.gui.FishTestLabGUI getFishTestLabGUI() {
         return fishTestLabGUI;
+    }
+
+    public me.antigravity.fishingeconomy.gui.FishingMasteryTreeGUI getFishingMasteryTreeGUI() {
+        return fishingMasteryTreeGUI;
     }
 }
