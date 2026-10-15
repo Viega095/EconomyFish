@@ -1,9 +1,12 @@
 package com.fishingeconomy.economy;
 
 import com.fishingeconomy.FishingEconomy;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +18,44 @@ public class EconomyManager {
     private final Map<UUID, Double> balanceCache = new HashMap<>();
     private File dataFile;
     private FileConfiguration dataConfig;
+    private Economy vaultEconomy = null;
+    private boolean vaultChecked = false;
 
     public EconomyManager(FishingEconomy plugin) {
         this.plugin = plugin;
         loadData();
+    }
+
+    public void setupVault() {
+        if (plugin.getServer().getPluginManager().getPlugin("Vault") == null) {
+            vaultChecked = true;
+            return;
+        }
+
+        try {
+            RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
+            if (rsp != null) {
+                Economy provider = rsp.getProvider();
+                if (provider != null && !provider.getClass().getName().contains("com.fishingeconomy")) {
+                    this.vaultEconomy = provider;
+                    plugin.getLogger().info("§a✔ Hooked directly into Vault Economy provider: " + provider.getName() + " (Unified server wallet)");
+                }
+            }
+        } catch (Throwable t) {
+            plugin.getLogger().warning("Could not hook into Vault economy: " + t.getMessage());
+        }
+        vaultChecked = true;
+    }
+
+    public Economy getVaultEconomy() {
+        if (!vaultChecked || vaultEconomy == null) {
+            setupVault();
+        }
+        return vaultEconomy;
+    }
+
+    public boolean isUsingVault() {
+        return getVaultEconomy() != null;
     }
 
     public void loadData() {
@@ -63,24 +100,68 @@ public class EconomyManager {
         }
     }
 
-    public double getBalance(OfflinePlayer player) {
+    public double getInternalBalance(OfflinePlayer player) {
+        if (player == null) return 0.0;
         return balanceCache.getOrDefault(player.getUniqueId(), plugin.getConfig().getDouble("starting-balance", 0.0));
     }
 
+    public double getBalance(OfflinePlayer player) {
+        if (player == null) return 0.0;
+        Economy vEco = getVaultEconomy();
+        if (vEco != null) {
+            return vEco.getBalance(player);
+        }
+        return getInternalBalance(player);
+    }
+
     public void setBalance(OfflinePlayer player, double amount) {
-        balanceCache.put(player.getUniqueId(), Math.max(0, amount));
-        saveAsync(); // Save periodically or async could be better, but for now simple save
+        if (player == null) return;
+        double target = Math.max(0, amount);
+        balanceCache.put(player.getUniqueId(), target);
+        saveAsync();
+
+        Economy vEco = getVaultEconomy();
+        if (vEco != null) {
+            double current = vEco.getBalance(player);
+            double diff = target - current;
+            if (diff > 0) {
+                vEco.depositPlayer(player, diff);
+            } else if (diff < 0) {
+                vEco.withdrawPlayer(player, -diff);
+            }
+        }
     }
 
     public void addBalance(OfflinePlayer player, double amount) {
+        if (player == null || amount <= 0) return;
+        Economy vEco = getVaultEconomy();
+        if (vEco != null) {
+            vEco.depositPlayer(player, amount);
+            balanceCache.put(player.getUniqueId(), vEco.getBalance(player));
+            saveAsync();
+            return;
+        }
         setBalance(player, getBalance(player) + amount);
     }
 
     public void withdrawBalance(OfflinePlayer player, double amount) {
+        if (player == null || amount <= 0) return;
+        Economy vEco = getVaultEconomy();
+        if (vEco != null) {
+            vEco.withdrawPlayer(player, amount);
+            balanceCache.put(player.getUniqueId(), vEco.getBalance(player));
+            saveAsync();
+            return;
+        }
         setBalance(player, getBalance(player) - amount);
     }
 
     public boolean hasBalance(OfflinePlayer player, double amount) {
+        if (player == null) return false;
+        Economy vEco = getVaultEconomy();
+        if (vEco != null) {
+            return vEco.has(player, amount);
+        }
         return getBalance(player) >= amount;
     }
 
@@ -106,26 +187,32 @@ public class EconomyManager {
     }
 
     public boolean has(UUID uuid, double amount) {
-        return balanceCache.getOrDefault(uuid, plugin.getConfig().getDouble("starting-balance", 0.0)) >= amount;
+        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+        return hasBalance(op, amount);
     }
 
     public void withdraw(UUID uuid, double amount) {
-        double current = balanceCache.getOrDefault(uuid, plugin.getConfig().getDouble("starting-balance", 0.0));
-        balanceCache.put(uuid, Math.max(0, current - amount));
-        saveAsync();
+        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+        withdrawBalance(op, amount);
     }
 
     public void deposit(UUID uuid, double amount) {
-        double current = balanceCache.getOrDefault(uuid, plugin.getConfig().getDouble("starting-balance", 0.0));
-        balanceCache.put(uuid, current + amount);
-        saveAsync();
+        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+        addBalance(op, amount);
     }
 
     public double getBalance(UUID uuid) {
-        return balanceCache.getOrDefault(uuid, plugin.getConfig().getDouble("starting-balance", 0.0));
+        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+        return getBalance(op);
     }
 
     public String format(double amount) {
+        Economy vEco = getVaultEconomy();
+        if (vEco != null) {
+            try {
+                return vEco.format(amount);
+            } catch (Throwable ignored) {}
+        }
         String symbol = plugin.getConfig().getString("currency.symbol", "$");
         String format = plugin.getConfig().getString("currency.format", "%amount% %symbol%");
         return format.replace("%amount%", String.format("%.2f", amount)).replace("%symbol%", symbol).replace("&", "§");
@@ -139,9 +226,6 @@ public class EconomyManager {
     }
 
     private void saveAsync() {
-        // For simplicity in this task, we'll just save on disable or periodically.
-        // But to ensure data safety, let's save immediately for now or schedule a task.
-        // Given "lightweight", let's just save.
         saveAll();
     }
 }

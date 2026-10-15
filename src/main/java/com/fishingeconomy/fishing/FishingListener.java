@@ -88,6 +88,15 @@ public class FishingListener implements Listener {
 
                 if ((isHighRarity || isForcedMinigame) && plugin.getReelingManager() != null && event.getHook() != null) {
                     event.setCancelled(true);
+
+                    // Animación Cinematográfica de Picada Mítica
+                    org.bukkit.Location hookLoc = event.getHook().getLocation();
+                    player.getWorld().spawnParticle(Particle.WATER_SPLASH, hookLoc, 35, 0.4, 0.5, 0.4, 0.15);
+                    player.getWorld().spawnParticle(Particle.GLOW, hookLoc.clone().add(0, 0.3, 0), 20, 0.3, 0.3, 0.3, 0.05);
+                    player.getWorld().spawnParticle(Particle.CRIT_MAGIC, hookLoc.clone().add(0, 0.5, 0), 15, 0.3, 0.4, 0.3, 0.1);
+                    player.playSound(hookLoc, Sound.ENTITY_PLAYER_SPLASH_HIGH_SPEED, 1.2f, 1.1f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 0.8f, 1.8f);
+
                     plugin.getReelingManager().startSession(player, event.getHook(), fish);
                     return;
                 }
@@ -130,6 +139,16 @@ public class FishingListener implements Listener {
         if (plugin.getExoticFishingEventManager() != null && plugin.getExoticFishingEventManager().isGhostLeviathanTideActive()) {
             finalPrice *= 2.50;
             player.spawnParticle(Particle.SOUL_FIRE_FLAME, player.getLocation().add(0, 1, 0), 12, 0.2, 0.2, 0.2, 0.05);
+        }
+
+        // Sinergia Alquímica con FlorArcana: Aceite de Loto Abisal
+        if (rod != null && rod.hasItemMeta()) {
+            org.bukkit.persistence.PersistentDataContainer pdc = rod.getItemMeta().getPersistentDataContainer();
+            if (pdc.has(new org.bukkit.NamespacedKey("floraarcana", "oil_abyssal_lotus"), PersistentDataType.BYTE)) {
+                finalPrice *= 1.40;
+                player.spawnParticle(Particle.ENCHANTMENT_TABLE, player.getLocation().add(0, 1, 0), 25, 0.4, 0.4, 0.4, 0.2);
+                player.sendMessage(ChatColor.LIGHT_PURPLE + "🌸 [Sinergia Alquímica] ¡El Aceite de Loto Abisal incrementa un +40% el valor de la captura!");
+            }
         }
 
         // Custom Rod Specific Bonuses

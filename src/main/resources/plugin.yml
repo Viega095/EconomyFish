@@ -4,7 +4,7 @@ main: com.fishingeconomy.FishingEconomy
 api-version: '1.20'
 authors: [Viega095]
 description: A lightweight economy plugin with fishing integration.
-depend: [Vault]
+softdepend: [Vault]
 
 commands:
   balance:

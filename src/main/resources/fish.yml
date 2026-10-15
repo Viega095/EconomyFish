@@ -315,3 +315,44 @@ fish:
       - "&4Monstruo marino legendario con escamas irrompibles."
     price: 35000.0
     chance: 15.0
+
+  STORM_ELECTRIC_RAY:
+    rarity: EPIC
+    material: PRISMARINE_SHARD
+    name: "&5&l⚡ Raya Eléctrica de la Tormenta"
+    lore:
+      - "&7Descarga arcos voltaicos capaces de paralizar depredadores."
+      - "&bGenera pulsos electromagnéticos en las mareas tempestuosas."
+    price: 3200.0
+    chance: 20.0
+
+  ANCIENT_CORAL_TURTLE:
+    rarity: LEGENDARY
+    material: TURTLE_HELMET
+    name: "&6&l🐢 Tortuga Milenaria del Arrecife"
+    lore:
+      - "&7Su caparazón sostiene un ecosistema viviente de coral fósil."
+      - "&aGuardián venerable de los arrecifes sagrados."
+    price: 8500.0
+    chance: 15.0
+
+  OPAL_ABYSSAL_SQUID:
+    rarity: MYTHIC
+    material: GLOW_INK_SAC
+    name: "&d&l✦ Calamar Ópalo del Vórtice ✦"
+    lore:
+      - "&7Tentáculos fosforescentes con refracciones tornasoladas."
+      - "&dExpulsa tinta de éter y perlas luminosas."
+    price: 26000.0
+    chance: 18.0
+
+  TITANIC_HAMMERHEAD:
+    rarity: LEGENDARY
+    material: PRISMARINE_CRYSTALS
+    name: "&6&l🦈 Tiburón Martillo Titánico"
+    lore:
+      - "&7Depredador ápice con sentidos biolocalizadores hiperdesarrollados."
+      - "&ePatrulla las fronteras entre el océano azul y el abismo negro."
+    price: 9500.0
+    chance: 15.0
+

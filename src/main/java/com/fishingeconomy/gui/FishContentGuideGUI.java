@@ -63,7 +63,8 @@ public class FishContentGuideGUI implements Listener {
                         "§8▪ §cFénix Abisal §7(+55% vel, llamas y perlas).",
                         "§8▪ §9Mareas Celestiales §7(+150% multiplicador de venta).",
                         "§8▪ §bCaña Divina de Poseidón §7(Clic Izq: Vórtice Marino Mítico).",
-                        "§8▪ §5Caña Cósmica del Vacío §7(Clic Izq: Agujero Negro Marino)."
+                        "§8▪ §5Caña Cósmica del Vacío §7(Clic Izq: Agujero Negro Marino).",
+                        "§8▪ §5Vara del Eclipse Abisal §6[NUEVA] §7(+105% vel, agujero negro)."
                 )));
 
         // Slot 12: Cebos Alquímicos & Engodos
@@ -88,10 +89,10 @@ public class FishContentGuideGUI implements Listener {
                         "§8▪ §fComunes, Poco Comunes y Raros §7(Ríos y costas).",
                         "§8▪ §5Épicos y Legendarios §7(Océanos profundos y tormentas).",
                         "§8▪ §dMíticos y Reliquias §7(Leviatanes, Megalodón, Poseidón).",
-                        "§8▪ §d✨ Medusa Cósmica Celestial §7[NUEVO].",
-                        "§8▪ §6⭐ Pez Rape de la Fosa Estelar §7[NUEVO].",
-                        "§8▪ §5🦀 Cangrejo del Magma Abisal §7[NUEVO].",
-                        "§8▪ §d✦ Serpiente Marina Titán del Abismo §7[NUEVO]."
+                        "§8▪ §5⚡ Raya Eléctrica de la Tormenta §6[NUEVO].",
+                        "§8▪ §6🐢 Tortuga Milenaria del Arrecife §6[NUEVO].",
+                        "§8▪ §d✦ Calamar Ópalo del Vórtice §6[NUEVO].",
+                        "§8▪ §6🦈 Tiburón Martillo Titánico §6[NUEVO]."
                 )));
 
         // Slot 16: Estructuras Multiblock Desplegables
@@ -101,7 +102,8 @@ public class FishContentGuideGUI implements Listener {
                         "§8▪ §aEstación de Cebo Alquímica §7- Caldero con síntesis rápida.",
                         "§8▪ §bAcuario Mágico & Fileteado §7- Tanque y mesa de corte.",
                         "§8▪ §3Acuario Domo Abisal §7- Cúpula de exhibición con ingresos pasivos.",
-                        "§8▪ §9Draga Abisal §7[NUEVA] - Grúa marina de extracción profunda.",
+                        "§8▪ §9Draga Abisal §7- Grúa marina de extracción profunda.",
+                        "§8▪ §bBiodomo de Arrecife Coralino §6[NUEVO] §7- Santuario de corales.",
                         "",
                         "§d✦ Desmontaje 100% Limpio: §7Romper cualquier bloque",
                         "§7elimina la estructura sin duplicar materiales y",

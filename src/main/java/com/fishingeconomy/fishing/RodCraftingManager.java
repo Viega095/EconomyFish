@@ -37,7 +37,9 @@ public class RodCraftingManager {
         POSEIDON_TRIDENT_ROD("§b§l✦ Caña Divina de Poseidón ✦", Material.FISHING_ROD, 0.85, 0.60, 500000.0,
                 List.of("§7Forjada con los tres picos del tridente de Poseidón.", "§e+85% Velocidad de Pesca", "§a+60% Doble Captura Mítica", "§b⚡ Habilidad Activa: Vórtice Marino (Clic Izq)")),
         VOID_COSMIC_ROD("§5§l✦ Caña Cósmica del Vacío Estelar ✦", Material.FISHING_ROD, 0.95, 0.70, 750000.0,
-                List.of("§7Forjada con núcleos de estrellas colapsadas.", "§e+95% Velocidad de Pesca", "§a+70% Doble Captura Cósmica", "§5✦ Habilidad Activa: Agujero Negro Marino (Clic Izq)"));
+                List.of("§7Forjada con núcleos de estrellas colapsadas.", "§e+95% Velocidad de Pesca", "§a+70% Doble Captura Cósmica", "§5✦ Habilidad Activa: Agujero Negro Marino (Clic Izq)")),
+        ABYSSAL_ECLIPSE_ROD("§5§l✦ Vara del Eclipse Abisal ✦", Material.FISHING_ROD, 1.05, 0.75, 1000000.0,
+                List.of("§7Forjada en las fosas marinas durante un eclipse lunar total.", "§e+105% Velocidad de Pesca", "§a+75% Doble Captura del Vacío", "§5✦ Habilidad Activa: Agujero Negro Abisal (Clic Izq)"));
 
         public final String displayName;
         public final Material material;

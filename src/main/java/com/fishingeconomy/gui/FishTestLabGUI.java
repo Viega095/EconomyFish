@@ -87,6 +87,10 @@ public class FishTestLabGUI implements Listener {
         inv.setItem(17, createBtn(Material.PRISMARINE_SHARD, "§b🔱 Dar Caña Divina de Poseidón [NUEVA]",
                 Arrays.asList("§7Caña legendaria con +85% velocidad.", "§b⚡ Clic Izquierdo desata Vórtice Marino.", "", "§b▶ Haz clic para recibir")));
 
+        // Slot 18: Dar Muelle de Trampas de Cangrejos
+        inv.setItem(18, createBtn(Material.BARREL, "§6📦 Dar Ítem: Muelle de Trampas de Cangrejos [NUEVO]",
+                Arrays.asList("§7Otorga el bloque crafteable con PDC.", "§7Colócalo para erigir el muelle y trampas pasivas.", "§cRomperlo desmonta al 100% sin duplicar.", "", "§6▶ Haz clic para recibir")));
+
         // --- FILA 2: Despliegue en el Mundo & Mecánicas ---
         // Slot 19: Spawear Estación de Cebo en Mundo
         inv.setItem(19, createBtn(Material.BREWING_STAND, "§a🏗️ Desplegar: Estación de Cebo en Mundo",
@@ -131,7 +135,7 @@ public class FishTestLabGUI implements Listener {
 
         // Slot 30: Recargar Balance
         inv.setItem(30, createBtn(Material.EMERALD_BLOCK, "§a💰 Recargar Saldo de Economía",
-                Arrays.asList("§7Deposita $100,000 en tu cuenta", "§7para pruebas de mercado y compras.", "", "§a▶ Haz clic para recargar")));
+                Arrays.asList("§7Deposita §a100,000 monedas §7en tu cuenta", "§7para pruebas de mercado y compras.", "", "§a▶ Haz clic para recargar")));
 
         // Slot 31: Maximizar Nivel de Caña
         inv.setItem(31, createBtn(Material.ANVIL, "§e⚡ Maximizar Nivel Marino de Caña",
@@ -186,6 +190,18 @@ public class FishTestLabGUI implements Listener {
         inv.setItem(44, createBtn(Material.CONDUIT, "§d🐟 Dar Kit 4 Peces Exóticos [NUEVO]",
                 Arrays.asList("§7Tiburón Magma, Mantarraya Vacío,", "§7Anguila Tempestad y Leviatán Abisal.", "", "§d▶ Haz clic para recibir")));
 
+        // Slot 27: Dar Cebo de Polvo de Estrellas
+        inv.setItem(27, createBtn(Material.AMETHYST_SHARD, "§d🪱 Dar Cebo de Polvo de Estrellas [NUEVO]",
+                Arrays.asList("§7Recibe x16 Cebos de Polvo de Estrellas.", "§7Atrae criaturas de las estrellas.", "", "§d▶ Haz clic para recibir")));
+
+        // Slot 36: Desplegar Biodomo de Arrecife en Mundo
+        inv.setItem(36, createBtn(Material.PRISMARINE_BRICKS, "§b🏗️ Desplegar: Biodomo Arrecife en Mundo",
+                Arrays.asList("§7Construye el biodomo de coral 3D", "§7directamente frente a tu posición.", "", "§b▶ Haz clic para desplegar")));
+
+        // Slot 45: Dar Biodomo de Arrecife
+        inv.setItem(45, createBtn(Material.PRISMARINE_BRICKS, "§b📦 Dar Ítem: Biodomo de Arrecife Coralino [NUEVO]",
+                Arrays.asList("§7Otorga el bloque crafteable con PDC.", "§7Colócalo para erigir el biodomo coralino.", "", "§b▶ Haz clic para recibir")));
+
         // Slot 46: Dar Draga Abisal
         inv.setItem(46, createBtn(Material.HOPPER, "§9📦 Dar Ítem: Draga Abisal [NUEVO]",
                 Arrays.asList("§7Otorga el bloque crafteable con PDC.", "§7Colócalo para erigir la grúa de dragado.", "", "§9▶ Haz clic para recibir")));
@@ -206,9 +222,17 @@ public class FishTestLabGUI implements Listener {
         inv.setItem(50, createBtn(Material.KNOWLEDGE_BOOK, "§b§l✦ Abrir Compendio / Guía Integral de Pesca ✦",
                 Arrays.asList("§7Abre la enciclopedia de EconomyFish.", "", "§b▶ Haz clic para consultar la guía")));
 
+        // Slot 51: Dar Vara del Eclipse Abisal
+        inv.setItem(51, createBtn(Material.FISHING_ROD, "§5🌌 Dar Vara del Eclipse Abisal [NUEVA]",
+                Arrays.asList("§7Caña suprema con +105% velocidad y +75% doble captura.", "§5⚡ Clic Izquierdo abre Agujero Negro Abisal.", "", "§5▶ Haz clic para recibir")));
+
         // Slot 52: Kit 4 Criaturas Cósmicas
         inv.setItem(52, createBtn(Material.AMETHYST_SHARD, "§d✨ Dar Kit 4 Criaturas Cósmicas [NUEVO]",
                 Arrays.asList("§7Medusa Cósmica, Pez Rape Estelar,", "§7Cangrejo Magma y Serpiente Titán.", "", "§d▶ Haz clic para recibir")));
+
+        // Slot 53: Kit 4 Peces del Arrecife y Abismo
+        inv.setItem(53, createBtn(Material.TROPICAL_FISH, "§a🐟 Dar Kit 4 Peces del Arrecife y Abismo [NUEVO]",
+                Arrays.asList("§7Raya Eléctrica, Tortuga Coralina,", "§7Calamar Ópalo y Tiburón Martillo.", "", "§a▶ Haz clic para recibir")));
 
         player.openInventory(inv);
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1f, 1.4f);
@@ -298,6 +322,13 @@ public class FishTestLabGUI implements Listener {
                     player.sendMessage(ChatColor.AQUA + "✔ ¡Caña Tridente de Poseidón añadida a tu inventario!");
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1.2f);
                 }
+                break;
+
+            case 18: // Dar Muelle de Trampas de Cangrejos
+                ItemStack crabTrap = plugin.getFishMultiblockManager().createStructureItem(FishMultiblockType.CRAB_TRAP_DOCK);
+                player.getInventory().addItem(crabTrap);
+                player.sendMessage(ChatColor.GOLD + "✦ [Lab] ¡Muelle de Trampas de Cangrejos entregado!");
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1.2f);
                 break;
 
             case 19: // Desplegar Estación de Cebo en Mundo
@@ -518,6 +549,43 @@ public class FishTestLabGUI implements Listener {
                 new FishContentGuideGUI(plugin).open(player);
                 break;
 
+            case 27: // Cebo de Polvo de Estrellas
+                if (plugin.getBaitManager() != null) {
+                    ItemStack stardust = plugin.getBaitManager().createBaitItem("stardust_bait", 16);
+                    if (stardust != null) {
+                        player.getInventory().addItem(stardust);
+                        player.sendMessage(ChatColor.LIGHT_PURPLE + "✔ ¡Has recibido x16 Cebos de Polvo de Estrellas!");
+                        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1.2f);
+                    }
+                }
+                break;
+
+            case 36: // Desplegar Biodomo de Arrecife en Mundo
+                player.closeInventory();
+                if (plugin.getFishMultiblockManager() != null) {
+                    Location spawnLoc = player.getLocation().getBlock().getRelative(player.getFacing(), 2).getLocation();
+                    plugin.getFishMultiblockManager().placeStructure(player, spawnLoc, FishMultiblockType.CORAL_REEF_BIODOME);
+                    player.sendMessage(ChatColor.AQUA + "✔ ¡Biodomo de Arrecife Coralino desplegado frente a ti!");
+                }
+                break;
+
+            case 45: // Dar Biodomo de Arrecife
+                if (plugin.getFishMultiblockManager() != null) {
+                    player.getInventory().addItem(plugin.getFishMultiblockManager().createStructureItem(FishMultiblockType.CORAL_REEF_BIODOME));
+                    player.sendMessage(ChatColor.AQUA + "✔ ¡Has recibido el Biodomo de Arrecife Coralino (PDC)!");
+                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1.2f);
+                }
+                break;
+
+            case 51: // Vara del Eclipse Abisal
+                if (plugin.getRodCraftingManager() != null) {
+                    ItemStack eclipseRod = plugin.getRodCraftingManager().createCustomRod(RodCraftingManager.CustomRodType.ABYSSAL_ECLIPSE_ROD);
+                    player.getInventory().addItem(eclipseRod);
+                    player.sendMessage(ChatColor.DARK_PURPLE + "✔ ¡Has recibido la Vara del Eclipse Abisal!");
+                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1.2f);
+                }
+                break;
+
             case 52: // Kit 4 Criaturas Cósmicas
                 if (plugin.getFishManager() != null) {
                     String[] cosmicFishIds = {"COSMIC_JELLYFISH", "STELLAR_ANGLERFISH", "MAGMA_CRAB", "TITAN_SEA_SERPENT"};
@@ -528,6 +596,20 @@ public class FishTestLabGUI implements Listener {
                         }
                     }
                     player.sendMessage(ChatColor.LIGHT_PURPLE + "✔ ¡Has recibido el kit con las 4 nuevas criaturas cósmicas!");
+                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1.5f);
+                }
+                break;
+
+            case 53: // Kit 4 Peces del Arrecife y Abismo
+                if (plugin.getFishManager() != null) {
+                    String[] newSpecies = {"STORM_ELECTRIC_RAY", "ANCIENT_CORAL_TURTLE", "OPAL_ABYSSAL_SQUID", "TITANIC_HAMMERHEAD"};
+                    for (String id : newSpecies) {
+                        FishManager.CustomFish fish = plugin.getFishManager().getAllFish().get(id);
+                        if (fish != null) {
+                            player.getInventory().addItem(plugin.getFishManager().createFishItem(fish));
+                        }
+                    }
+                    player.sendMessage(ChatColor.AQUA + "✔ ¡Has recibido el kit con las 4 nuevas especies del arrecife y abismo!");
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1.5f);
                 }
                 break;

@@ -39,6 +39,7 @@ public class FishMultiblockManager {
         templates.put(FishMultiblockType.MAGIC_AQUARIUM, new FishMultiblockTemplate(FishMultiblockType.MAGIC_AQUARIUM, 2.35));
         templates.put(FishMultiblockType.BIODOME_AQUARIUM, new FishMultiblockTemplate(FishMultiblockType.BIODOME_AQUARIUM, 2.85));
         templates.put(FishMultiblockType.DEEP_SEA_DREDGER, new FishMultiblockTemplate(FishMultiblockType.DEEP_SEA_DREDGER, 2.50));
+        templates.put(FishMultiblockType.CORAL_REEF_BIODOME, new FishMultiblockTemplate(FishMultiblockType.CORAL_REEF_BIODOME, 2.85));
 
         loadStructures();
         registerRecipes();
@@ -97,15 +98,14 @@ public class FishMultiblockManager {
         World world = coreLoc.getWorld();
         if (world != null) {
             Location holoLoc = coreLoc.clone().add(0.5, template.getHologramOffsetY(), 0.5);
-            ArmorStand stand = world.spawn(holoLoc, ArmorStand.class, as -> {
-                as.setVisible(false);
-                as.setGravity(false);
-                as.setCanPickupItems(false);
-                as.setCustomName(type.getHologramTitle());
-                as.setCustomNameVisible(true);
-                as.setMarker(true);
-                as.setSmall(true);
-            });
+            ArmorStand stand = (ArmorStand) world.spawnEntity(holoLoc, org.bukkit.entity.EntityType.ARMOR_STAND);
+            stand.setVisible(false);
+            stand.setGravity(false);
+            stand.setCanPickupItems(false);
+            stand.setCustomName(type.getHologramTitle());
+            stand.setCustomNameVisible(true);
+            stand.setMarker(true);
+            stand.setSmall(true);
             active.addEntityUuid(stand.getUniqueId());
         }
 
@@ -225,6 +225,19 @@ public class FishMultiblockManager {
         dredgerRecipe.setIngredient('B', Material.PRISMARINE_BRICKS);
         dredgerRecipe.setIngredient('S', Material.SOUL_LANTERN);
         Bukkit.addRecipe(dredgerRecipe);
+
+        // Recipe 5: Biodomo de Arrecife Coralino
+        NamespacedKey reefKey = new NamespacedKey(plugin, "fish_recipe_coral_reef_biodome");
+        Bukkit.removeRecipe(reefKey);
+        ShapedRecipe reefRecipe = new ShapedRecipe(reefKey, createStructureItem(FishMultiblockType.CORAL_REEF_BIODOME));
+        reefRecipe.shape("GCG", "PBP", "DSD");
+        reefRecipe.setIngredient('G', Material.LIGHT_BLUE_STAINED_GLASS);
+        reefRecipe.setIngredient('C', Material.BRAIN_CORAL_BLOCK);
+        reefRecipe.setIngredient('P', Material.PRISMARINE_BRICKS);
+        reefRecipe.setIngredient('B', Material.HEART_OF_THE_SEA);
+        reefRecipe.setIngredient('D', Material.DIAMOND);
+        reefRecipe.setIngredient('S', Material.SEA_LANTERN);
+        Bukkit.addRecipe(reefRecipe);
     }
 
     public void loadStructures() {

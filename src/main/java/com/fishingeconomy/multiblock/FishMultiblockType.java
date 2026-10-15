@@ -56,6 +56,32 @@ public enum FishMultiblockType {
                     "§9✦ Draga automáticamente reliquias y tesoros del fondo abisal."
             ),
             "§9§l✦ Draga Abisal de Aguas Profundas ✦"
+    ),
+    CORAL_REEF_BIODOME(
+            "CORAL_REEF_BIODOME",
+            "§b§lBiodomo de Arrecife Coralino",
+            Material.PRISMARINE_BRICKS,
+            List.of(
+                    "§7Santuario viviente de corales y fauna tropical.",
+                    "§7Coloca este bloque para erigir el biodomo cristalino.",
+                    "§c✦ Al romper cualquier bloque se desmonta al 100%",
+                    "§c  y se reembolsa este ítem original sin pérdidas.",
+                    "§b✦ Clic derecho otorga bendición oceánica de pesca acelerada."
+            ),
+            "§b§l✦ Biodomo de Arrecife Coralino ✦"
+    ),
+    CRAB_TRAP_DOCK(
+            "CRAB_TRAP_DOCK",
+            "§6§lMuelle de Trampas de Cangrejos",
+            Material.BARREL,
+            List.of(
+                    "§7Estructura costera de captura y recolección marina.",
+                    "§7Coloca este bloque para erigir el muelle y las nasas.",
+                    "§c✦ Al romper cualquier bloque se desmonta al 100%",
+                    "§c  y se reembolsa este ítem original sin pérdidas.",
+                    "§6✦ Clic derecho recolecta cangrejos, ostras y perlas marinas."
+            ),
+            "§6§l✦ Muelle de Trampas de Cangrejos ✦"
     );
 
     private final String id;

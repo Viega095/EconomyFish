@@ -144,6 +144,62 @@ public class FishMultiblockTemplate {
 
             // Derrick Beacon at y = 2
             blocks.add(new RelativeBlock(0, 2, 0, Material.SOUL_LANTERN, false));
+
+        } else if (type == FishMultiblockType.CORAL_REEF_BIODOME) {
+            // Core Prismarine Bricks at 0, 0, 0
+            blocks.add(new RelativeBlock(0, 0, 0, Material.PRISMARINE_BRICKS, true));
+
+            // Base platform 3x3 at y = -1
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -1; z <= 1; z++) {
+                    Material mat = (x == 0 && z == 0) ? Material.SEA_LANTERN : Material.DARK_PRISMARINE;
+                    blocks.add(new RelativeBlock(x, -1, z, mat, false));
+                }
+            }
+
+            // Glass walls and corals at y = 0
+            blocks.add(new RelativeBlock(1, 0, 0, Material.LIGHT_BLUE_STAINED_GLASS, false));
+            blocks.add(new RelativeBlock(-1, 0, 0, Material.LIGHT_BLUE_STAINED_GLASS, false));
+            blocks.add(new RelativeBlock(0, 0, 1, Material.LIGHT_BLUE_STAINED_GLASS, false));
+            blocks.add(new RelativeBlock(0, 0, -1, Material.LIGHT_BLUE_STAINED_GLASS, false));
+
+            // Coral blocks at corners
+            blocks.add(new RelativeBlock(-1, 0, -1, Material.BRAIN_CORAL_BLOCK, false));
+            blocks.add(new RelativeBlock(1, 0, -1, Material.BUBBLE_CORAL_BLOCK, false));
+            blocks.add(new RelativeBlock(-1, 0, 1, Material.FIRE_CORAL_BLOCK, false));
+            blocks.add(new RelativeBlock(1, 0, 1, Material.HORN_CORAL_BLOCK, false));
+
+            // Water dome interior at y = 1
+            blocks.add(new RelativeBlock(0, 1, 0, Material.WATER, false));
+            blocks.add(new RelativeBlock(1, 1, 0, Material.LIGHT_BLUE_STAINED_GLASS, false));
+            blocks.add(new RelativeBlock(-1, 1, 0, Material.LIGHT_BLUE_STAINED_GLASS, false));
+            blocks.add(new RelativeBlock(0, 1, 1, Material.LIGHT_BLUE_STAINED_GLASS, false));
+            blocks.add(new RelativeBlock(0, 1, -1, Material.LIGHT_BLUE_STAINED_GLASS, false));
+
+            // Crown at y = 2
+            blocks.add(new RelativeBlock(0, 2, 0, Material.SEA_LANTERN, false));
+        } else if (type == FishMultiblockType.CRAB_TRAP_DOCK) {
+            // Core
+            blocks.add(new RelativeBlock(0, 0, 0, Material.BARREL, true));
+
+            // Wooden dock platform at y = -1 (3x3)
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -1; z <= 1; z++) {
+                    blocks.add(new RelativeBlock(x, -1, z, Material.MANGROVE_PLANKS, false));
+                }
+            }
+
+            // Four corner posts at y = 0
+            blocks.add(new RelativeBlock(-1, 0, -1, Material.MANGROVE_FENCE, false));
+            blocks.add(new RelativeBlock(1, 0, -1, Material.MANGROVE_FENCE, false));
+            blocks.add(new RelativeBlock(-1, 0, 1, Material.MANGROVE_FENCE, false));
+            blocks.add(new RelativeBlock(1, 0, 1, Material.MANGROVE_FENCE, false));
+
+            // Lanterns on corner posts at y = 1
+            blocks.add(new RelativeBlock(-1, 1, -1, Material.LANTERN, false));
+            blocks.add(new RelativeBlock(1, 1, -1, Material.LANTERN, false));
+            blocks.add(new RelativeBlock(-1, 1, 1, Material.LANTERN, false));
+            blocks.add(new RelativeBlock(1, 1, 1, Material.LANTERN, false));
         }
     }
 

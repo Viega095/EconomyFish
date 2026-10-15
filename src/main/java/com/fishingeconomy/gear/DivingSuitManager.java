@@ -127,7 +127,7 @@ public class DivingSuitManager implements Listener {
                     "  §a✔ +35% de Doble Captura automática",
                     "  §e✔ Pesca submarina desbloqueada al nadar",
                     "",
-                    "§eHaz clic en cada pieza para comprarla por $5,000 c/u"
+                    "§eHaz clic en cada pieza para comprarla por §a5,000 monedas §ec/u"
             ));
             info.setItemMeta(iMeta);
         }

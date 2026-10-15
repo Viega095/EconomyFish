@@ -108,6 +108,15 @@ public class BaitManager {
                 3.0,
                 List.of("&7Condensación de gas estelar y energía abisal.", "&d+350% Atracción de Medusas y Peces Cósmicos", "&bPesca instantánea con vórtice estelar")
         ));
+
+        registeredBaits.put("stardust_bait", new BaitType(
+                "stardust_bait",
+                "&d✦ Cebo de Polvo de Estrellas ✦",
+                Material.AMETHYST_SHARD,
+                4.0,
+                2.5,
+                List.of("&7Polvo cósmico brillante del vacío celestial.", "&5Permite pescar criaturas de las estrellas", "&d+300% Probabilidad de Criaturas Astrales")
+        ));
     }
 
     public ItemStack createBaitItem(String id, int amount) {

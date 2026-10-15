@@ -1,6 +1,7 @@
 package com.fishingeconomy.fishing;
 
 import com.fishingeconomy.FishingEconomy;
+import com.fishingeconomy.events.GlobalEventLock;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -36,8 +37,17 @@ public class OceanicBossRaid implements Listener {
             return false;
         }
 
+        if (GlobalEventLock.isEventActive()) {
+            plugin.getLogger().info("[Boss Oceánico] No se pudo invocar: otro evento global está en curso (" + GlobalEventLock.getActiveEventTitle() + ").");
+            return false;
+        }
+
         String name = type.equalsIgnoreCase("kraken") ? "§5§l✦ KRAKEN DE LAS PROFUNDIDADES ✦" : "§b§l✦ MEGALODÓN ANCESTRAL ✦";
         this.bossName = name;
+
+        if (!GlobalEventLock.acquireLock(plugin, name, 600)) {
+            return false;
+        }
 
         ElderGuardian guardian = (ElderGuardian) loc.getWorld().spawnEntity(loc, EntityType.ELDER_GUARDIAN);
         guardian.setCustomName(name);
@@ -117,11 +127,53 @@ public class OceanicBossRaid implements Listener {
             }
             event.getDrops().add(mythicPearl);
 
+            // Cross-Plugin Synergy Drop: Escama o Tentáculo para la Forja de Titanes (RPGCore)
+            if (bossName.contains("KRAKEN")) {
+                ItemStack tentacle = new ItemStack(Material.PRISMARINE_SHARD);
+                ItemMeta tMeta = tentacle.getItemMeta();
+                if (tMeta != null) {
+                    tMeta.setDisplayName("§5§l✦ Tentáculo del Kraken Abisal ✦");
+                    tMeta.setLore(Arrays.asList(
+                            "§7Reliquia orgánica obtenida del terror del océano.",
+                            "§d[Material Legendario]",
+                            "§9Compatible con la §6Forja de Titanes (RPG) §9para",
+                            "§9imbuir armaduras con afinidad de las profundidades."
+                    ));
+                    tMeta.getPersistentDataContainer().set(
+                            new org.bukkit.NamespacedKey(plugin, "kraken_tentacle"),
+                            org.bukkit.persistence.PersistentDataType.BYTE,
+                            (byte) 1
+                    );
+                    tentacle.setItemMeta(tMeta);
+                }
+                event.getDrops().add(tentacle);
+            } else {
+                ItemStack scale = new ItemStack(Material.PRISMARINE_CRYSTALS);
+                ItemMeta sMeta = scale.getItemMeta();
+                if (sMeta != null) {
+                    sMeta.setDisplayName("§b§l✦ Escama de Megalodón Ancestral ✦");
+                    sMeta.setLore(Arrays.asList(
+                            "§7Placa dérmica impenetrable de un depredador arcaico.",
+                            "§d[Material Legendario]",
+                            "§9Compatible con la §6Forja de Titanes (RPG) §9para",
+                            "§9otorgar resistencia al daño abisal."
+                    ));
+                    sMeta.getPersistentDataContainer().set(
+                            new org.bukkit.NamespacedKey(plugin, "megalodon_scale"),
+                            org.bukkit.persistence.PersistentDataType.BYTE,
+                            (byte) 1
+                    );
+                    scale.setItemMeta(sMeta);
+                }
+                event.getDrops().add(scale);
+            }
+
             if (bossBar != null) {
                 bossBar.removeAll();
                 bossBar = null;
             }
             currentBoss = null;
+            GlobalEventLock.releaseLock(plugin);
         }
     }
 

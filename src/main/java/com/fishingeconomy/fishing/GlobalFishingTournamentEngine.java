@@ -1,6 +1,7 @@
 package com.fishingeconomy.fishing;
 
 import com.fishingeconomy.FishingEconomy;
+import com.fishingeconomy.events.GlobalEventLock;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -58,9 +59,18 @@ public class GlobalFishingTournamentEngine {
         return active;
     }
 
-    public void startTournament(DerbyType type, int durationMinutes) {
+    public boolean startTournament(DerbyType type, int durationMinutes) {
+        if (GlobalEventLock.isEventActive() && !this.active) {
+            plugin.getLogger().info("[Torneo] Otro evento global está en curso (" + GlobalEventLock.getActiveEventTitle() + "). Cancelando inicio para evitar superposiciones.");
+            return false;
+        }
+
         if (active) {
             stopTournament(false);
+        }
+
+        if (!GlobalEventLock.acquireLock(plugin, "Torneo: " + type.getName(), durationMinutes * 60)) {
+            return false;
         }
 
         this.currentType = type;
@@ -112,6 +122,7 @@ public class GlobalFishingTournamentEngine {
                 }
             }
         }.runTaskTimer(plugin, 20L, 20L);
+        return true;
     }
 
     public void recordCatch(Player player, FishManager.CustomFish fish) {
@@ -133,6 +144,7 @@ public class GlobalFishingTournamentEngine {
 
     public void stopTournament(boolean announceWinners) {
         this.active = false;
+        GlobalEventLock.releaseLock(plugin);
         if (task != null) {
             task.cancel();
         }

@@ -40,8 +40,7 @@ public class FishMultiblockListener implements Listener {
         // Check clearance for entire structure
         if (!manager.canPlaceStructure(placeLoc, type)) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "✖ Espacio insuficiente para desplegar " + type.getDisplayName() + ChatColor.RED + ".");
-            player.sendMessage(ChatColor.GRAY + "Asegúrate de que el área circundante esté despejada (aire o agua).");
+            player.sendMessage(ChatColor.RED + "✖ No se puede desplegar " + type.getDisplayName() + ChatColor.RED + " aquí (límite del mundo o bloque protegido).");
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
             return;
         }
@@ -129,6 +128,14 @@ public class FishMultiblockListener implements Listener {
                     player.playSound(player.getLocation(), Sound.AMBIENT_UNDERWATER_ENTER, 1f, 1.2f);
                 }
             }
+        } else if (structure.getType() == FishMultiblockType.CRAB_TRAP_DOCK) {
+            event.setCancelled(true);
+            player.sendMessage("§6🦀 [Muelle de Trampas] §a¡Has revisado las trampas de cangrejo! Has obtenido recursos marinos frescos y $250.");
+            player.playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_SPLASH, 1f, 1.2f);
+            player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 1.4f);
+            plugin.getEconomyManager().depositPlayer(player, 250.0);
+            player.getInventory().addItem(new ItemStack(Material.NAUTILUS_SHELL, 1));
+            player.getInventory().addItem(new ItemStack(Material.COD, 2));
         }
     }
 
