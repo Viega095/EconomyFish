@@ -234,3 +234,84 @@ fish:
       - "&eReliquia Abisal Única: Codiciada por todo el reino."
     price: 25000.0
     chance: 30.0
+
+  # ================= NUEVAS ESPECIES EXÓTICAS Y DIMENSIONALES =================
+  LAVA_SHARK:
+    rarity: LEGENDARY
+    material: MAGMA_CREAM
+    name: "&6&l🔥 Tiburón de Magma Volcánico"
+    lore:
+      - "&7Nada en mares de lava del Nether y fosas ígneas subterráneas."
+      - "&cRequiere Cebo Ígneo para resistir las altísimas temperaturas."
+    price: 4500.0
+    chance: 20.0
+
+  VOID_RAY:
+    rarity: MYTHIC
+    material: PHANTOM_MEMBRANE
+    name: "&d&l🌌 Mantarraya del Vacío Cósmico"
+    lore:
+      - "&7Criatura flotante que surca el vacío infinito de The End."
+      - "&5Capturada mediante anzuelos imbuidos en polvo de estrellas."
+    price: 19000.0
+    chance: 25.0
+
+  TEMPEST_EEL:
+    rarity: RARE
+    material: PRISMARINE_SHARD
+    name: "&9&l⚡ Anguila de la Tempestad Eléctrica"
+    lore:
+      - "&7Aparece únicamente durante furiosas tormentas y aguaceros."
+      - "&bSu cuerpo emite descargas eléctricas constantes."
+    price: 950.0
+    chance: 30.0
+
+  ABYSSAL_LEVIATHAN:
+    rarity: MYTHIC
+    material: CONDUIT
+    name: "&d&l✦ Leviatán Abisal de la Medianoche ✦"
+    lore:
+      - "&7Monstruo milenario de las fosas abisales oceánicas."
+      - "&eReliquia Abisal Única: El trofeo definitivo de los mares."
+    price: 30000.0
+    chance: 20.0
+
+  COSMIC_JELLYFISH:
+    rarity: MYTHIC
+    material: AMETHYST_SHARD
+    name: "&d&l✨ Medusa Cósmica Celestial"
+    lore:
+      - "&7Flota emitiendo destellos de polvo estelar cósmico."
+      - "&5Atraída con gran eficacia por el Cebo de la Nebulosa."
+    price: 22000.0
+    chance: 20.0
+
+  STELLAR_ANGLERFISH:
+    rarity: LEGENDARY
+    material: GLOWSTONE_DUST
+    name: "&6&l⭐ Pez Rape de la Fosa Estelar"
+    lore:
+      - "&7Usa una bombilla bioluminiscente de energía estelar pura."
+      - "&eCaza en la oscuridad más profunda del abismo marino."
+    price: 5200.0
+    chance: 20.0
+
+  MAGMA_CRAB:
+    rarity: EPIC
+    material: FIRE_CHARGE
+    name: "&5&l🦀 Cangrejo del Magma Abisal"
+    lore:
+      - "&7Acorazado con placas de roca volcánica ardiente."
+      - "&cHabita cerca de chimeneas hidrotermales oceánicas."
+    price: 2800.0
+    chance: 25.0
+
+  TITAN_SEA_SERPENT:
+    rarity: MYTHIC
+    material: SCULK_CATALYST
+    name: "&d&l✦ Serpiente Marina Titán del Abismo ✦"
+    lore:
+      - "&7Bestia colosal que desgarra las corrientes oceánicas."
+      - "&4Monstruo marino legendario con escamas irrompibles."
+    price: 35000.0
+    chance: 15.0
